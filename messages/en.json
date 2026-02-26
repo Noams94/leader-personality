@@ -178,6 +178,8 @@
     "weakness": "Weakness",
     "interpretTitle": "Score Interpretation",
     "interpretDesc": "Scores are means on a 1–5 scale. Higher scores indicate stronger presence of that trait. For Psychopathy and Irritability, scores significantly above benchmark indicate a concern worth investigating.",
-    "followerInterpretDesc": "Scores are means on a 1–5 scale. Supportiveness and Weakness emerged uniquely in follower ratings; no population benchmarks exist for these two dimensions. For the five shared factors, scores are compared to business leader self-reports (Study 4)."
+    "followerInterpretDesc": "Scores are means on a 1–5 scale. Supportiveness and Weakness emerged uniquely in follower ratings; no population benchmarks exist for these two dimensions. For the five shared factors, scores are compared to business leader self-reports (Study 4).",
+    "disclaimerTitle": "Research Notice",
+    "disclaimerText": "This assessment is a research-based educational tool intended for self-reflection and professional development. Results reflect self-reported perceptions and should not be used as the sole basis for employment decisions, clinical evaluation, or organizational screening."
   }
 }

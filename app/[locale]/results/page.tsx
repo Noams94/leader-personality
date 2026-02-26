@@ -239,9 +239,18 @@ export default function ResultsPage() {
         </div>
 
         {/* Interpretation note */}
-        <div className={`border rounded-2xl p-5 mb-8 ${interpretBg}`}>
+        <div className={`border rounded-2xl p-5 mb-4 ${interpretBg}`}>
           <h3 className={`font-bold mb-2 text-sm ${interpretTitle}`}>{t('interpretTitle')}</h3>
           <p className={`text-sm leading-relaxed ${interpretText}`}>{t(interpretDescKey)}</p>
+        </div>
+
+        {/* Research disclaimer */}
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-8 flex gap-3 items-start">
+          <span className="text-base mt-0.5 shrink-0">⚠️</span>
+          <div>
+            <h3 className="font-semibold text-amber-900 text-sm mb-1">{t('disclaimerTitle')}</h3>
+            <p className="text-xs text-amber-800 leading-relaxed">{t('disclaimerText')}</p>
+          </div>
         </div>
 
         {/* Action buttons */}

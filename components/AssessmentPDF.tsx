@@ -25,7 +25,6 @@ const FACTOR_LABELS_EN: Record<string, string> = {
   weakness:       'Weakness',
 };
 
-// Only leader factors have benchmark data
 const BENCHMARKED_FACTORS = new Set([
   'energy', 'psychopathy', 'organization', 'irritability', 'intellect',
 ]);
@@ -40,59 +39,35 @@ const styles = StyleSheet.create({
   },
   header: {
     borderBottom: '2pt solid #1d4ed8',
-    paddingBottom: 16,
-    marginBottom: 24,
+    paddingBottom: 14,
+    marginBottom: 20,
   },
   title: {
-    fontSize: 22,
+    fontSize: 20,
     fontFamily: 'Helvetica-Bold',
     color: '#0f172a',
     marginBottom: 4,
   },
   subtitle: {
-    fontSize: 11,
+    fontSize: 10,
     color: '#64748b',
   },
   sectionTitle: {
-    fontSize: 13,
+    fontSize: 12,
     fontFamily: 'Helvetica-Bold',
     color: '#1d4ed8',
-    marginBottom: 12,
-    marginTop: 20,
+    marginBottom: 10,
+    marginTop: 16,
   },
   chartContainer: {
     alignItems: 'center',
-    marginBottom: 4,
   },
-  table: {
-    width: '100%',
-  },
-  tableHeader: {
-    flexDirection: 'row',
-    backgroundColor: '#f1f5f9',
-    padding: '8pt 10pt',
-    borderRadius: 4,
-    marginBottom: 4,
-  },
-  tableRow: {
-    flexDirection: 'row',
-    padding: '10pt 10pt',
-    borderBottom: '0.5pt solid #e2e8f0',
-    alignItems: 'center',
-  },
-  colFactor: { flex: 2,   fontSize: 11, fontFamily: 'Helvetica-Bold', color: '#0f172a' },
-  colScore:  { flex: 1,   fontSize: 11, color: '#374151', textAlign: 'center' },
-  colBench:  { flex: 1,   fontSize: 11, color: '#374151', textAlign: 'center' },
-  colStatus: { flex: 1.5, fontSize: 10, textAlign: 'center' },
-  headerText:{ fontSize: 10, fontFamily: 'Helvetica-Bold', color: '#475569' },
-  above: { color: '#16a34a', fontFamily: 'Helvetica-Bold' },
-  below: { color: '#dc2626', fontFamily: 'Helvetica-Bold' },
-  match: { color: '#2563eb', fontFamily: 'Helvetica-Bold' },
   legend: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 20,
-    marginBottom: 12,
+    gap: 18,
+    marginTop: 4,
+    marginBottom: 4,
   },
   legendItem: {
     flexDirection: 'row',
@@ -100,57 +75,105 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   legendDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+    width: 9,
+    height: 9,
+    borderRadius: 4.5,
   },
   legendText: {
-    fontSize: 9,
+    fontSize: 8.5,
     color: '#374151',
   },
+  table: {
+    width: '100%',
+  },
+  tableHeader: {
+    flexDirection: 'row',
+    backgroundColor: '#f1f5f9',
+    padding: '7pt 10pt',
+    borderRadius: 4,
+    marginBottom: 3,
+  },
+  tableRow: {
+    flexDirection: 'row',
+    padding: '9pt 10pt',
+    borderBottom: '0.5pt solid #e2e8f0',
+    alignItems: 'center',
+  },
+  colFactor: { flex: 2,   fontSize: 10.5, fontFamily: 'Helvetica-Bold', color: '#0f172a' },
+  colScore:  { flex: 1,   fontSize: 10.5, color: '#374151', textAlign: 'center' },
+  colBench:  { flex: 1,   fontSize: 10.5, color: '#374151', textAlign: 'center' },
+  colStatus: { flex: 1.5, fontSize: 9.5,  textAlign: 'center' },
+  headerText:{ fontSize: 9.5, fontFamily: 'Helvetica-Bold', color: '#475569' },
+  above: { color: '#16a34a', fontFamily: 'Helvetica-Bold' },
+  below: { color: '#dc2626', fontFamily: 'Helvetica-Bold' },
+  match: { color: '#2563eb', fontFamily: 'Helvetica-Bold' },
   interpretBox: {
-    marginTop: 20,
-    padding: 14,
+    marginTop: 14,
+    padding: 12,
     backgroundColor: '#f8fafc',
     borderRadius: 6,
     borderLeft: '3pt solid #1d4ed8',
   },
   interpretTitle: {
-    fontSize: 11,
+    fontSize: 10.5,
     fontFamily: 'Helvetica-Bold',
     color: '#0f172a',
-    marginBottom: 6,
+    marginBottom: 5,
   },
   interpretText: {
-    fontSize: 10,
+    fontSize: 9.5,
     color: '#475569',
+    lineHeight: 1.5,
+  },
+  disclaimerBox: {
+    marginTop: 14,
+    padding: 12,
+    backgroundColor: '#fffbeb',
+    borderRadius: 6,
+    borderLeft: '3pt solid #d97706',
+  },
+  disclaimerTitle: {
+    fontSize: 10,
+    fontFamily: 'Helvetica-Bold',
+    color: '#92400e',
+    marginBottom: 4,
+  },
+  disclaimerText: {
+    fontSize: 9,
+    color: '#78350f',
     lineHeight: 1.5,
   },
   footer: {
     position: 'absolute',
-    bottom: 32,
+    bottom: 28,
     left: 48,
     right: 48,
     borderTop: '0.5pt solid #e2e8f0',
-    paddingTop: 8,
+    paddingTop: 7,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: 'flex-start',
   },
-  footerText: {
-    fontSize: 9,
+  footerCitation: {
+    flex: 1,
+    fontSize: 8,
     color: '#94a3b8',
+    marginRight: 12,
+  },
+  footerUrl: {
+    fontSize: 8,
+    color: '#94a3b8',
+    flexShrink: 0,
   },
 });
 
 const STATUS_LABEL: Record<string, string> = {
-  above: '▲ Above Benchmark',
-  below: '▼ Below Benchmark',
-  match: '● At Benchmark',
+  above: 'Above Benchmark',
+  below: 'Below Benchmark',
+  match: 'At Benchmark',
 };
 
 // ─── Native SVG Radar Chart ───────────────────────────────────────────────────
 
-/** Convert an array of values to an SVG polygon points string on a polar grid. */
 function radarPoints(
   vals: number[],
   cx: number, cy: number,
@@ -166,30 +189,32 @@ function radarPoints(
     .join(' ');
 }
 
-interface RadarProps {
-  scoreValues:     number[];
+function RadarChartPDF({
+  scoreValues,
+  benchmarkValues,
+  factorLabels,
+}: {
+  scoreValues: number[];
   benchmarkValues?: number[];
-  factorLabels:    string[];
-}
-
-function RadarChartPDF({ scoreValues, benchmarkValues, factorLabels }: RadarProps) {
+  factorLabels: string[];
+}) {
   const n    = scoreValues.length;
-  const cx   = 220;
-  const cy   = 200;
-  const rMax = 130;
+  const cx   = 210;
+  const cy   = 148;    // shifted down a bit for top-label clearance
+  const rMax = 108;
   const vMax = 5;
-  const lbR  = rMax + 22;   // label radius
+  const lbR  = rMax + 22;
   const ang  = (i: number) => -Math.PI / 2 + (2 * Math.PI * i) / n;
 
-  const scoreStr = radarPoints(scoreValues,                cx, cy, rMax, vMax, n);
+  const scoreStr = radarPoints(scoreValues,              cx, cy, rMax, vMax, n);
   const benchStr = benchmarkValues
     ? radarPoints(benchmarkValues, cx, cy, rMax, vMax, n)
     : null;
 
   return (
-    <Svg width={440} height={410}>
+    <Svg width={420} height={278}>
 
-      {/* ── Grid rings (1–5) ── */}
+      {/* Grid rings 1–5 */}
       {[1, 2, 3, 4, 5].map(v => (
         <Polygon
           key={`ring-${v}`}
@@ -200,7 +225,7 @@ function RadarChartPDF({ scoreValues, benchmarkValues, factorLabels }: RadarProp
         />
       ))}
 
-      {/* ── Axis lines ── */}
+      {/* Axis lines */}
       {Array.from({ length: n }, (_, i) => (
         <Line
           key={`axis-${i}`}
@@ -212,7 +237,7 @@ function RadarChartPDF({ scoreValues, benchmarkValues, factorLabels }: RadarProp
         />
       ))}
 
-      {/* ── Benchmark polygon (dashed red) ── */}
+      {/* Benchmark polygon (dashed red) */}
       {benchStr && (
         <Polygon
           points={benchStr}
@@ -224,7 +249,7 @@ function RadarChartPDF({ scoreValues, benchmarkValues, factorLabels }: RadarProp
         />
       )}
 
-      {/* ── Score polygon (solid blue) ── */}
+      {/* Score polygon (solid blue) */}
       <Polygon
         points={scoreStr}
         fill="#2563eb"
@@ -233,16 +258,22 @@ function RadarChartPDF({ scoreValues, benchmarkValues, factorLabels }: RadarProp
         strokeWidth={2}
       />
 
-      {/* ── Score dots ── */}
+      {/* Score dots */}
       {scoreValues.map((v, i) => {
         const a = ang(i);
         const d = (v / vMax) * rMax;
         return (
-          <Circle key={`dot-${i}`} cx={cx + d * Math.cos(a)} cy={cy + d * Math.sin(a)} r={3.5} fill="#2563eb" />
+          <Circle
+            key={`dot-${i}`}
+            cx={cx + d * Math.cos(a)}
+            cy={cy + d * Math.sin(a)}
+            r={3.5}
+            fill="#2563eb"
+          />
         );
       })}
 
-      {/* ── Axis labels ── */}
+      {/* Axis labels */}
       {factorLabels.map((label, i) => {
         const a   = ang(i);
         const cos = Math.cos(a);
@@ -256,7 +287,7 @@ function RadarChartPDF({ scoreValues, benchmarkValues, factorLabels }: RadarProp
             x={lx}
             y={ly + 4}
             style={{
-              fontSize: 9,
+              fontSize: 8.5,
               fill: '#374151',
               fontFamily: 'Helvetica',
               textAnchor: anchor,
@@ -306,7 +337,7 @@ export function AssessmentPDF({ scores, role = 'leader' }: AssessmentPDFProps) {
           <Text style={styles.subtitle}>{pageSubtitle}{date}</Text>
         </View>
 
-        {/* ── Radar chart (native SVG — no screenshot) ── */}
+        {/* ── Radar chart ── */}
         <Text style={styles.sectionTitle}>Profile Visualization</Text>
         <View style={styles.chartContainer}>
           <RadarChartPDF
@@ -332,49 +363,59 @@ export function AssessmentPDF({ scores, role = 'leader' }: AssessmentPDFProps) {
           )}
         </View>
 
-        {/* ── Scores table ── */}
-        <Text style={styles.sectionTitle}>Factor Scores</Text>
-        <View style={styles.table}>
-          <View style={styles.tableHeader}>
-            <Text style={[styles.headerText, { flex: 2 }]}>Factor</Text>
-            <Text style={[styles.headerText, { flex: 1, textAlign: 'center' }]}>Score</Text>
-            <Text style={[styles.headerText, { flex: 1, textAlign: 'center' }]}>Benchmark</Text>
-            <Text style={[styles.headerText, { flex: 1.5, textAlign: 'center' }]}>Status</Text>
+        {/* ── Scores table — wrap={false} prevents mid-row page breaks ── */}
+        <View wrap={false}>
+          <Text style={styles.sectionTitle}>Factor Scores</Text>
+          <View style={styles.table}>
+            <View style={styles.tableHeader}>
+              <Text style={[styles.headerText, { flex: 2 }]}>Factor</Text>
+              <Text style={[styles.headerText, { flex: 1, textAlign: 'center' }]}>Score</Text>
+              <Text style={[styles.headerText, { flex: 1, textAlign: 'center' }]}>Benchmark</Text>
+              <Text style={[styles.headerText, { flex: 1.5, textAlign: 'center' }]}>Status</Text>
+            </View>
+            {factorOrder.map(factor => {
+              const score    = scoreMap[factor] ?? 0;
+              const hasBench = BENCHMARKED_FACTORS.has(factor);
+              const bench    = hasBench ? (BENCHMARKS as Record<string, number>)[factor] : null;
+              const status   = bench != null ? getComparisonLabel(score, bench) : null;
+              return (
+                <View key={factor} style={styles.tableRow}>
+                  <Text style={styles.colFactor}>{FACTOR_LABELS_EN[factor] ?? factor}</Text>
+                  <Text style={styles.colScore}>{score.toFixed(2)}</Text>
+                  <Text style={styles.colBench}>{bench != null ? bench.toFixed(2) : '—'}</Text>
+                  <Text style={[styles.colStatus, status ? styles[status] : {}]}>
+                    {status ? STATUS_LABEL[status] : 'No reference data'}
+                  </Text>
+                </View>
+              );
+            })}
           </View>
-          {factorOrder.map(factor => {
-            const score    = scoreMap[factor] ?? 0;
-            const hasBench = BENCHMARKED_FACTORS.has(factor);
-            const bench    = hasBench ? (BENCHMARKS as Record<string, number>)[factor] : null;
-            const status   = bench != null ? getComparisonLabel(score, bench) : null;
-            return (
-              <View key={factor} style={styles.tableRow}>
-                <Text style={styles.colFactor}>{FACTOR_LABELS_EN[factor] ?? factor}</Text>
-                <Text style={styles.colScore}>{score.toFixed(2)}</Text>
-                <Text style={styles.colBench}>{bench != null ? bench.toFixed(2) : '—'}</Text>
-                <Text style={[styles.colStatus, status ? styles[status] : {}]}>
-                  {status ? STATUS_LABEL[status] : 'No reference data'}
-                </Text>
-              </View>
-            );
-          })}
         </View>
 
-        {/* ── Interpretation note ── */}
-        <View style={styles.interpretBox}>
+        {/* ── Interpretation note — wrap={false} keeps it together ── */}
+        <View wrap={false} style={styles.interpretBox}>
           <Text style={styles.interpretTitle}>Score Interpretation</Text>
           <Text style={styles.interpretText}>
             {isFollower
               ? 'Scores are means on a 1–5 Likert scale. Supportiveness and Weakness emerged uniquely in follower ratings; no population benchmarks exist for these two dimensions. For the five shared factors, scores are compared to business leader self-reports (Study 4).'
-              : 'Scores are means on a 1–5 Likert scale. Higher scores indicate stronger presence of that trait. For Psychopathy and Irritability, scores significantly above benchmark indicate a concern worth investigating further. Benchmark values are derived from Study 4 of Dr. Keshet\'s PhD dissertation (Business sector leaders).'}
+              : 'Scores are means on a 1–5 Likert scale. Higher scores indicate stronger presence of that trait. For Psychopathy and Irritability, scores significantly above benchmark indicate a concern worth investigating. Benchmark values are from Study 4, Business sector leaders (Keshet, 2026).'}
           </Text>
         </View>
 
-        {/* ── Footer ── */}
-        <View style={styles.footer} fixed>
-          <Text style={styles.footerText}>
-            Based on: Keshet et al. (2026). Basic dimensions of leader personality: a lexical study in Hebrew. Journal of Research in Personality, 120, 1-13.
+        {/* ── Research disclaimer — wrap={false} keeps it together ── */}
+        <View wrap={false} style={styles.disclaimerBox}>
+          <Text style={styles.disclaimerTitle}>Research Notice</Text>
+          <Text style={styles.disclaimerText}>
+            This assessment is a research-based educational tool intended for self-reflection and professional development. Results reflect self-reported perceptions and should not be used as the sole basis for employment decisions, clinical evaluation, or organizational screening. For professional consulting or academic collaboration, contact Dr. Keshet at LeaderPersonality.com.
           </Text>
-          <Text style={styles.footerText}>LeaderPersonality.com</Text>
+        </View>
+
+        {/* ── Footer (fixed on every page) ── */}
+        <View style={styles.footer} fixed>
+          <Text style={styles.footerCitation}>
+            Based on: Keshet, N. S., Oreg, S., Berson, Y., Hoogeboom, M. A., &amp; de Vries, R. E. (2026). Basic dimensions of leader personality: a lexical study in Hebrew. Journal of Research in Personality, 120, 1-13.
+          </Text>
+          <Text style={styles.footerUrl}>LeaderPersonality.com</Text>
         </View>
 
       </Page>
