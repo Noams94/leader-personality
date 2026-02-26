@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
 import dynamic from 'next/dynamic';
@@ -47,10 +47,9 @@ function ScoreBar({ score, benchmark }: { score: number; benchmark?: number }) {
   );
 }
 
-function PDFDownloadButton({ scores, role, chartRef, label, generatingLabel }: {
+function PDFDownloadButton({ scores, role, label, generatingLabel }: {
   scores: FactorScores | FollowerScores;
   role: Role;
-  chartRef: React.RefObject<HTMLDivElement | null>;
   label: string;
   generatingLabel: string;
 }) {
@@ -58,53 +57,14 @@ function PDFDownloadButton({ scores, role, chartRef, label, generatingLabel }: {
 
   const handleDownload = async () => {
     setLoading(true);
-
     try {
-      let chartImageUrl: string | undefined;
-
-      // Capture the radar chart by serialising its SVG directly.
-      // This replaces html2canvas, which throws on Tailwind v4's oklch/lab
-      // CSS custom-property values that its legacy color parser doesn't support.
-      if (chartRef.current) {
-        try {
-          const svgEl = chartRef.current.querySelector('svg');
-          if (svgEl) {
-            const { width, height } = svgEl.getBoundingClientRect();
-            const w = width  || 400;
-            const h = height || 400;
-            const serialized = new XMLSerializer().serializeToString(svgEl);
-            const blob = new Blob([serialized], { type: 'image/svg+xml' });
-            const url  = URL.createObjectURL(blob);
-            await new Promise<void>(resolve => {
-              const img = new Image();
-              img.onload = () => {
-                const cvs = document.createElement('canvas');
-                cvs.width  = w * 2;
-                cvs.height = h * 2;
-                const ctx = cvs.getContext('2d')!;
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(0, 0, cvs.width, cvs.height);
-                ctx.drawImage(img, 0, 0, w * 2, h * 2);
-                chartImageUrl = cvs.toDataURL('image/png');
-                URL.revokeObjectURL(url);
-                resolve();
-              };
-              img.onerror = () => { URL.revokeObjectURL(url); resolve(); };
-              img.src = url;
-            });
-          }
-        } catch {
-          // SVG capture failed — PDF will generate without the radar image.
-        }
-      }
-
       const { pdf } = await import('@react-pdf/renderer');
       const { AssessmentPDF } = await import('@/components/AssessmentPDF');
       const React = (await import('react')).default;
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const blob = await pdf(
-        React.createElement(AssessmentPDF, { scores: scores as FactorScores, role, chartImageUrl }) as any
+        React.createElement(AssessmentPDF, { scores: scores as FactorScores, role }) as any
       ).toBlob();
 
       const url = URL.createObjectURL(blob);
@@ -141,7 +101,6 @@ export default function ResultsPage() {
   const locale = useLocale();
   const [scores, setScores] = useState<FactorScores | FollowerScores | null>(null);
   const [role, setRole] = useState<Role>('leader');
-  const chartRef = useRef<HTMLDivElement>(null);
   const factorLabels = locale === 'he' ? FACTOR_LABELS_HE : FACTOR_LABELS_EN;
 
   useEffect(() => {
@@ -207,7 +166,7 @@ export default function ResultsPage() {
         </div>
 
         {/* Radar Chart */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8" ref={chartRef}>
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
           <h2 className="font-bold text-gray-900 mb-1 text-center">{t('profileViz')}</h2>
           <p className="text-xs text-center text-gray-400 mb-4">{t(profileVizDescKey)}</p>
           <ResultsRadar
@@ -290,7 +249,6 @@ export default function ResultsPage() {
           <PDFDownloadButton
             scores={scores}
             role={role}
-            chartRef={chartRef}
             label={t('downloadPdf')}
             generatingLabel={t('generating')}
           />
