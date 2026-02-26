@@ -4,7 +4,6 @@ import { useState, useMemo } from 'react';
 import { useRouter } from '@/i18n/navigation';
 import { ITEMS, LEADER_FACTOR_KEYS, FOLLOWER_FACTOR_KEYS } from '@/lib/items';
 import type { Responses, Role } from '@/lib/types';
-import LikertItem from './LikertItem';
 
 interface AssessmentWizardProps {
   locale: string;
@@ -39,44 +38,58 @@ function seededShuffle<T>(arr: T[], seed: number): T[] {
 
 export default function AssessmentWizard({ locale, t }: AssessmentWizardProps) {
   const router = useRouter();
-  const [role, setRole] = useState<Role | null>(null);
-  const [step, setStep] = useState(0);
+  const [role, setRole]         = useState<Role | null>(null);
+  const [itemIndex, setItemIndex] = useState(0);
   const [responses, setResponses] = useState<Responses>({});
-  const [seed] = useState(() => Math.floor(Math.random() * 1000));
+  const [seed]                  = useState(() => Math.floor(Math.random() * 1000));
+  const [fading, setFading]     = useState(false);
   const isRtl = locale === 'he';
 
-  const factorKeys = role === 'follower' ? FOLLOWER_FACTOR_KEYS : LEADER_FACTOR_KEYS;
-  const totalSteps = factorKeys.length;
-  const currentFactor = role ? factorKeys[step] : null;
+  // Flat shuffled list: shuffle within each factor, then concatenate
+  const allItems = useMemo(() => {
+    if (!role) return [];
+    const keys = role === 'follower' ? FOLLOWER_FACTOR_KEYS : LEADER_FACTOR_KEYS;
+    return keys.flatMap((factor, fi) =>
+      seededShuffle(ITEMS.filter(i => i.factor === factor), seed + fi)
+    );
+  }, [role, seed]);
 
-  const stepItems = useMemo(
-    () => currentFactor ? seededShuffle(ITEMS.filter(i => i.factor === currentFactor), seed + step) : [],
-    [currentFactor, seed, step]
-  );
+  const totalItems  = allItems.length;
+  const currentItem = allItems[itemIndex] ?? null;
+  const isLast      = itemIndex === totalItems - 1;
+  const currentValue = currentItem ? responses[currentItem.id] : undefined;
 
-  const stepAnswered = stepItems.filter(i => responses[i.id] !== undefined).length;
-  const stepComplete = stepAnswered === stepItems.length;
+  const handleSelect = (value: number) => {
+    if (fading || !currentItem) return;
 
-  const handleChange = (id: string, value: number) => {
-    setResponses(prev => ({ ...prev, [id]: value }));
-  };
+    const newResponses = { ...responses, [currentItem.id]: value };
+    setResponses(newResponses);
 
-  const handleNext = () => {
-    if (step < totalSteps - 1) {
-      setStep(s => s + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      sessionStorage.setItem('assessmentResponses', JSON.stringify(responses));
-      sessionStorage.setItem('assessmentRole', role!);
-      router.push('/results');
+    if (isLast) {
+      // Brief pause so the selected button is visible, then navigate
+      setTimeout(() => {
+        sessionStorage.setItem('assessmentResponses', JSON.stringify(newResponses));
+        sessionStorage.setItem('assessmentRole', role!);
+        router.push('/results');
+      }, 450);
+      return;
     }
+
+    // Fade out → advance → fade in
+    setFading(true);
+    setTimeout(() => {
+      setItemIndex(i => i + 1);
+      setFading(false);
+    }, 200);
   };
 
   const handleBack = () => {
-    if (step > 0) {
-      setStep(s => s - 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    if (itemIndex === 0 || fading) return;
+    setFading(true);
+    setTimeout(() => {
+      setItemIndex(i => i - 1);
+      setFading(false);
+    }, 150);
   };
 
   // ── Role selection screen ────────────────────────────────────────
@@ -90,7 +103,6 @@ export default function AssessmentWizard({ locale, t }: AssessmentWizardProps) {
         </div>
 
         <div className="grid sm:grid-cols-2 gap-6">
-          {/* Manager card */}
           <button
             type="button"
             onClick={() => setRole('leader')}
@@ -104,11 +116,10 @@ export default function AssessmentWizard({ locale, t }: AssessmentWizardProps) {
             </h3>
             <p className="text-gray-500 text-sm leading-relaxed">{t.leaderCardDesc}</p>
             <div className="mt-4 text-xs font-semibold text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity">
-              50 items · 5 factors →
+              50 פריטים · 5 גורמים →
             </div>
           </button>
 
-          {/* Employee card */}
           <button
             type="button"
             onClick={() => setRole('follower')}
@@ -122,7 +133,7 @@ export default function AssessmentWizard({ locale, t }: AssessmentWizardProps) {
             </h3>
             <p className="text-gray-500 text-sm leading-relaxed">{t.followerCardDesc}</p>
             <div className="mt-4 text-xs font-semibold text-purple-500 opacity-0 group-hover:opacity-100 transition-opacity">
-              70 items · 7 factors →
+              70 פריטים · 7 גורמים →
             </div>
           </button>
         </div>
@@ -130,91 +141,88 @@ export default function AssessmentWizard({ locale, t }: AssessmentWizardProps) {
     );
   }
 
-  // ── Assessment step ──────────────────────────────────────────────
+  if (!currentItem) return null;
+
+  const accentBg    = role === 'follower' ? 'bg-purple-600'    : 'bg-blue-600';
+  const accentHover = role === 'follower' ? 'hover:bg-purple-500' : 'hover:bg-blue-500';
+  const accentRing  = role === 'follower' ? 'ring-purple-400'  : 'ring-blue-400';
   const instructions = role === 'leader' ? t.instructionsLeader : t.instructionsFollower;
-  const progressText = t.progress
-    .replace('{step}', String(step + 1))
-    .replace('{total}', String(totalSteps));
-  const progressPercent = ((step + (stepComplete ? 1 : stepAnswered / stepItems.length)) / totalSteps) * 100;
-  const accentColor = role === 'follower' ? 'bg-purple-600' : 'bg-blue-600';
-  const accentHover = role === 'follower' ? 'hover:bg-purple-700' : 'hover:bg-blue-700';
+  const progressPercent = ((itemIndex + 1) / totalItems) * 100;
+  const label = locale === 'he' ? currentItem.labelHe : currentItem.labelEn;
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-md mx-auto">
+
       {/* Progress bar */}
       <div className="mb-8">
-        <div className="flex justify-between text-sm text-gray-500 mb-2">
-          <span>{progressText}</span>
-          <span>{stepAnswered} / {stepItems.length}</span>
+        <div className="flex justify-between text-xs text-gray-400 mb-2">
+          <span>{itemIndex + 1} / {totalItems}</span>
+          <span>{Math.round(progressPercent)}%</span>
         </div>
-        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
           <div
-            className={`h-full ${accentColor} rounded-full transition-all duration-300`}
+            className={`h-full ${accentBg} rounded-full transition-all duration-300`}
             style={{ width: `${progressPercent}%` }}
           />
         </div>
       </div>
 
       {/* Instructions */}
-      <p className="text-gray-600 text-sm mb-6 italic">{instructions}</p>
+      <p className="text-center text-xs text-gray-400 mb-6 italic leading-relaxed px-2">
+        {instructions}
+      </p>
 
-      {/* Items */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 px-6 py-2 mb-8">
-        {stepItems.map(item => (
-          <LikertItem
-            key={item.id}
-            item={item}
-            value={responses[item.id]}
-            onChange={handleChange}
-            locale={locale}
-            scale1Label={t.scale1}
-            scale5Label={t.scale5}
-          />
-        ))}
-      </div>
+      {/* Item card — fades between items */}
+      <div className={`transition-opacity duration-200 ${fading ? 'opacity-0' : 'opacity-100'}`}>
+        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 px-8 py-12 mb-6 text-center">
 
-      {/* Navigation */}
-      <div className={`flex items-center ${isRtl ? 'flex-row-reverse' : ''} justify-between gap-4`}>
-        <button
-          type="button"
-          onClick={handleBack}
-          disabled={step === 0}
-          className="px-6 py-3 rounded-xl border border-gray-300 text-gray-600 font-medium
-            hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-        >
-          {t.back}
-        </button>
+          {/* The adjective */}
+          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-12 tracking-tight">
+            {label}
+          </h2>
 
-        {/* Step dot indicators */}
-        <div className="flex gap-1.5 flex-wrap justify-center">
-          {factorKeys.map((_, i) => (
-            <div
-              key={i}
-              className={`w-2 h-2 rounded-full transition-colors ${
-                i < step
-                  ? (role === 'follower' ? 'bg-purple-600' : 'bg-blue-600')
-                  : i === step
-                  ? (role === 'follower' ? 'bg-purple-400' : 'bg-blue-400')
-                  : 'bg-gray-200'
-              }`}
-            />
-          ))}
+          {/* Scale endpoint labels */}
+          <div className={`flex justify-between text-xs text-gray-400 mb-3 px-1 ${isRtl ? 'flex-row-reverse' : ''}`}>
+            <span>{t.scale1}</span>
+            <span>{t.scale5}</span>
+          </div>
+
+          {/* 1–5 buttons */}
+          <div className="flex gap-3 justify-center">
+            {[1, 2, 3, 4, 5].map(v => (
+              <button
+                key={v}
+                onClick={() => handleSelect(v)}
+                className={`
+                  w-12 h-12 sm:w-14 sm:h-14 rounded-full font-bold text-lg select-none
+                  transition-all duration-150
+                  ${currentValue === v
+                    ? `${accentBg} ${accentHover} text-white shadow-md scale-110 ring-2 ring-offset-2 ${accentRing}`
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200 active:scale-95'
+                  }
+                `}
+              >
+                {v}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <button
-          type="button"
-          onClick={handleNext}
-          disabled={!stepComplete}
-          className={`px-8 py-3 rounded-xl font-semibold text-white transition-all duration-150
-            ${stepComplete
-              ? `${accentColor} ${accentHover} shadow-md hover:shadow-lg`
-              : 'bg-gray-300 cursor-not-allowed'
-            }
-          `}
-        >
-          {step === totalSteps - 1 ? t.submit : t.next}
-        </button>
+        {/* Back button */}
+        <div className={`flex ${isRtl ? 'justify-end' : 'justify-start'}`}>
+          <button
+            onClick={handleBack}
+            disabled={itemIndex === 0}
+            className="px-4 py-2 rounded-xl text-sm text-gray-400
+              hover:text-gray-600 hover:bg-gray-100
+              disabled:opacity-0 disabled:pointer-events-none
+              transition-all duration-150"
+          >
+            {t.back}
+          </button>
+        </div>
       </div>
+
     </div>
   );
 }
