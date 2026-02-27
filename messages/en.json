@@ -148,7 +148,28 @@
     "back": "← Back",
     "submit": "See My Results",
     "scale1": "Not at all",
-    "scale5": "Extremely"
+    "scale5": "Extremely",
+    "leaderCardHint": "50 items · 5 factors",
+    "followerCardHint": "70 items · 7 factors",
+    "genderTitle": "About You",
+    "genderSubtitle": "This helps us personalize the assessment language.",
+    "genderMale": "Male",
+    "genderFemale": "Female",
+    "genderOther": "Other / Prefer not to say",
+    "leaderGenderTitle": "About Your Supervisor",
+    "leaderGenderSubtitle": "This helps us refer to your supervisor correctly.",
+    "leaderGenderMale": "He / Male supervisor",
+    "leaderGenderFemale": "She / Female supervisor",
+    "leaderGenderOther": "Unknown / Other",
+    "demographicsTitle": "A Few Optional Questions",
+    "demographicsSubtitle": "Your answers help improve the research. All fields are optional.",
+    "demographicsSkip": "Skip",
+    "demographicsContinue": "Continue",
+    "ageLabel": "Age",
+    "industryLabel": "Industry",
+    "orgSizeLabel": "Organization size",
+    "experienceLeaderLabel": "Years of management experience",
+    "experienceFollowerLabel": "Years with this supervisor"
   },
   "results": {
     "leaderTitle": "Your Leadership Profile",
@@ -187,6 +208,12 @@
     "sector_religious": "Religious",
     "benchmarkLabel_business": "Business leaders benchmark",
     "benchmarkLabel_military": "Military leaders benchmark",
-    "benchmarkLabel_religious": "Religious leaders benchmark"
+    "benchmarkLabel_religious": "Religious leaders benchmark",
+    "followerTitleMale": "Your Supervisor's Profile",
+    "followerTitleFemale": "Your Supervisor's Profile",
+    "followerSubtitleMale": "Your supervisor's leadership personality based on your ratings.",
+    "followerSubtitleFemale": "Your supervisor's leadership personality based on your ratings.",
+    "followerProfileVizDescMale": "Seven-factor profile — follower ratings of supervisor",
+    "followerProfileVizDescFemale": "Seven-factor profile — follower ratings of supervisor"
   }
 }

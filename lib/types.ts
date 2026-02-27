@@ -4,6 +4,7 @@ export type Factor = FollowerFactor;
 
 export type Role = 'leader' | 'follower';
 export type Sector = 'business' | 'military' | 'religious';
+export type Gender = 'male' | 'female' | 'other';
 
 export interface AssessmentItem {
   id: string;

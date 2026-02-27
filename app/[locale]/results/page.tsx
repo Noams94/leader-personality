@@ -7,7 +7,7 @@ import dynamic from 'next/dynamic';
 import { Link } from '@/i18n/navigation';
 import { scoreAssessment, scoreFollowerAssessment, getComparisonLabel } from '@/lib/scoring';
 import { SECTOR_BENCHMARKS, FACTOR_ORDER, FOLLOWER_FACTOR_ORDER } from '@/lib/benchmarks';
-import type { FactorScores, FollowerScores, Role, Sector } from '@/lib/types';
+import type { FactorScores, FollowerScores, Role, Sector, Gender } from '@/lib/types';
 
 const ResultsRadar = dynamic(() => import('@/components/ResultsRadar'), { ssr: false });
 
@@ -102,19 +102,23 @@ function PDFDownloadButton({ scores, role, sector, label, generatingLabel }: {
 export default function ResultsPage() {
   const t = useTranslations('results');
   const locale = useLocale();
-  const [scores, setScores] = useState<FactorScores | FollowerScores | null>(null);
-  const [role, setRole] = useState<Role>('leader');
-  const [sector, setSector] = useState<Sector>('business');
+  const [scores, setScores]           = useState<FactorScores | FollowerScores | null>(null);
+  const [role, setRole]               = useState<Role>('leader');
+  const [sector, setSector]           = useState<Sector>('business');
+  const [leaderGender, setLeaderGender] = useState<Gender | null>(null);
   const factorLabels = locale === 'he' ? FACTOR_LABELS_HE : FACTOR_LABELS_EN;
 
   useEffect(() => {
-    const stored = sessionStorage.getItem('assessmentResponses');
+    const stored     = sessionStorage.getItem('assessmentResponses');
     const storedRole = sessionStorage.getItem('assessmentRole') as Role | null;
+    const storedLG   = sessionStorage.getItem('assessmentLeaderGender') as Gender | null;
+
     if (stored) {
       try {
-        const responses = JSON.parse(stored);
+        const responses  = JSON.parse(stored);
         const parsedRole: Role = storedRole === 'follower' ? 'follower' : 'leader';
         setRole(parsedRole);
+        setLeaderGender(storedLG);
         setScores(
           parsedRole === 'follower'
             ? scoreFollowerAssessment(responses)
@@ -146,8 +150,24 @@ export default function ResultsPage() {
   const scoreMap     = scores as Record<string, number>;
   const selectedBench = SECTOR_BENCHMARKS[sector];
 
-  const titleKey      = isFollower ? 'followerTitle'       : 'leaderTitle';
-  const subtitleKey   = isFollower ? 'followerSubtitle'    : 'leaderSubtitle';
+  // Base title / subtitle keys
+  let titleKey:     string = isFollower ? 'followerTitle'    : 'leaderTitle';
+  let subtitleKey:  string = isFollower ? 'followerSubtitle' : 'leaderSubtitle';
+  let followerVizDescKey: string = 'followerProfileVizDesc';
+
+  // Hebrew gender-aware overrides for follower role
+  if (locale === 'he' && isFollower && leaderGender) {
+    if (leaderGender === 'male') {
+      titleKey          = 'followerTitleMale';
+      subtitleKey       = 'followerSubtitleMale';
+      followerVizDescKey = 'followerProfileVizDescMale';
+    } else if (leaderGender === 'female') {
+      titleKey          = 'followerTitleFemale';
+      subtitleKey       = 'followerSubtitleFemale';
+      followerVizDescKey = 'followerProfileVizDescFemale';
+    }
+  }
+
   const interpretDescKey = isFollower ? 'followerInterpretDesc' : 'interpretDesc';
 
   const accentActive  = isFollower ? 'bg-purple-600 text-white' : 'bg-blue-600 text-white';
@@ -198,7 +218,7 @@ export default function ResultsPage() {
           {/* Chart description */}
           <p className="text-xs text-center text-gray-400 mb-4">
             {isFollower
-              ? t('followerProfileVizDesc')
+              ? t(followerVizDescKey)
               : t('profileVizDesc', { sector: t(`sector_${sector}`) })}
           </p>
 

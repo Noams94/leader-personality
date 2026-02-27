@@ -28,25 +28,7 @@ export default async function AssessmentPage({ params }: PageProps) {
           <p className="text-gray-500 leading-relaxed max-w-lg mx-auto">{t('subtitle')}</p>
         </div>
 
-        <AssessmentWizard
-          locale={locale}
-          t={{
-            roleTitle:            t('roleTitle'),
-            roleSubtitle:         t('roleSubtitle'),
-            leaderCard:           t('leaderCard'),
-            leaderCardDesc:       t('leaderCardDesc'),
-            followerCard:         t('followerCard'),
-            followerCardDesc:     t('followerCardDesc'),
-            instructionsLeader:   t('instructionsLeader'),
-            instructionsFollower: t('instructionsFollower'),
-            progress:             t.raw('progress') as string,
-            next:                 t('next'),
-            back:                 t('back'),
-            submit:               t('submit'),
-            scale1:               t('scale1'),
-            scale5:               t('scale5'),
-          }}
-        />
+        <AssessmentWizard />
       </div>
     </div>
   );

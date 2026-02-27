@@ -148,7 +148,28 @@
     "back": "→ חזרה",
     "submit": "ראו את התוצאות",
     "scale1": "כלל לא",
-    "scale5": "במידה רבה מאוד"
+    "scale5": "במידה רבה מאוד",
+    "leaderCardHint": "50 פריטים · 5 גורמים",
+    "followerCardHint": "70 פריטים · 7 גורמים",
+    "genderTitle": "קצת עליכם",
+    "genderSubtitle": "זה עוזר לנו להתאים את שפת השאלון.",
+    "genderMale": "זכר",
+    "genderFemale": "נקבה",
+    "genderOther": "אחר / מעדיפ/ת לא לציין",
+    "leaderGenderTitle": "על המנהל/ת שלכם",
+    "leaderGenderSubtitle": "כדי שנוכל לנסח את השאלון בהתאם למגדר המנהל/ת.",
+    "leaderGenderMale": "מנהל (זכר)",
+    "leaderGenderFemale": "מנהלת (נקבה)",
+    "leaderGenderOther": "אחר / לא ידוע",
+    "demographicsTitle": "כמה שאלות רשות",
+    "demographicsSubtitle": "תשובותיכם עוזרות לשיפור המחקר. כל השדות רשות.",
+    "demographicsSkip": "דלג/י",
+    "demographicsContinue": "המשך",
+    "ageLabel": "גיל",
+    "industryLabel": "תחום עיסוק",
+    "orgSizeLabel": "גודל הארגון",
+    "experienceLeaderLabel": "שנות ניסיון ניהולי",
+    "experienceFollowerLabel": "שנות עבודה תחת מנהל/ת זה/ו"
   },
   "results": {
     "leaderTitle": "הפרופיל המנהיגותי שלכם",
@@ -187,6 +208,12 @@
     "sector_religious": "דתי",
     "benchmarkLabel_business": "נורמת מנהיגים עסקיים",
     "benchmarkLabel_military": "נורמת מנהיגים צבאיים",
-    "benchmarkLabel_religious": "נורמת מנהיגים דתיים"
+    "benchmarkLabel_religious": "נורמת מנהיגים דתיים",
+    "followerTitleMale": "הפרופיל המנהיגותי של המנהל שלכם",
+    "followerTitleFemale": "הפרופיל המנהיגותי של המנהלת שלכם",
+    "followerSubtitleMale": "פרופיל האישיות המנהיגותית של המנהל שלכם בהתבסס על הדירוגים שלכם.",
+    "followerSubtitleFemale": "פרופיל האישיות המנהיגותית של המנהלת שלכם בהתבסס על הדירוגים שלכם.",
+    "followerProfileVizDescMale": "פרופיל שבעה גורמים — דירוגי עובד על המנהל",
+    "followerProfileVizDescFemale": "פרופיל שבעה גורמים — דירוגי עובד על המנהלת"
   }
 }
