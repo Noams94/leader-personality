@@ -11,8 +11,8 @@ import {
   Polygon,
   Circle,
 } from '@react-pdf/renderer';
-import type { FactorScores, FollowerScores, Role } from '@/lib/types';
-import { BENCHMARKS, FACTOR_ORDER, FOLLOWER_FACTOR_ORDER } from '@/lib/benchmarks';
+import type { FactorScores, FollowerScores, Role, Sector } from '@/lib/types';
+import { SECTOR_BENCHMARKS, FACTOR_ORDER, FOLLOWER_FACTOR_ORDER } from '@/lib/benchmarks';
 import { getComparisonLabel } from '@/lib/scoring';
 
 const FACTOR_LABELS_EN: Record<string, string> = {
@@ -303,27 +303,36 @@ function RadarChartPDF({
 
 // ─── Main PDF Document ────────────────────────────────────────────────────────
 
+const SECTOR_LABEL_EN: Record<Sector, string> = {
+  business: 'Business',
+  military: 'Military',
+  religious: 'Religious',
+};
+
 interface AssessmentPDFProps {
-  scores: FactorScores | FollowerScores;
-  role?:  Role;
+  scores:  FactorScores | FollowerScores;
+  role?:   Role;
+  sector?: Sector;
 }
 
-export function AssessmentPDF({ scores, role = 'leader' }: AssessmentPDFProps) {
+export function AssessmentPDF({ scores, role = 'leader', sector = 'business' }: AssessmentPDFProps) {
   const date = new Date().toLocaleDateString('en-US', {
     year: 'numeric', month: 'long', day: 'numeric',
   });
-  const isFollower  = role === 'follower';
-  const scoreMap    = scores as Record<string, number>;
-  const factorOrder = isFollower ? FOLLOWER_FACTOR_ORDER : FACTOR_ORDER;
-  const pageTitle   = isFollower ? 'Supervisor Personality Profile' : 'Leader Personality Profile';
-  const pageSubtitle = isFollower
-    ? 'Dr. Noam Keshet — Leader Personality Research · Follower Report · '
-    : 'Dr. Noam Keshet — Leader Personality Research · ';
+  const isFollower    = role === 'follower';
+  const scoreMap      = scores as Record<string, number>;
+  const factorOrder   = isFollower ? FOLLOWER_FACTOR_ORDER : FACTOR_ORDER;
+  const sectorLabel   = SECTOR_LABEL_EN[sector];
+  const sectorBench   = SECTOR_BENCHMARKS[sector] as Record<string, number>;
+  const pageTitle     = isFollower ? 'Supervisor Personality Profile' : 'Leader Personality Profile';
+  const pageSubtitle  = isFollower
+    ? `Dr. Noam Keshet — Leader Personality Research · Follower Report · ${sectorLabel} Sector · `
+    : `Dr. Noam Keshet — Leader Personality Research · ${sectorLabel} Sector · `;
 
   // Radar data
   const radarScores = factorOrder.map(f => scoreMap[f] ?? 0);
   const radarBench  = !isFollower
-    ? FACTOR_ORDER.map(f => (BENCHMARKS as Record<string, number>)[f] ?? 0)
+    ? FACTOR_ORDER.map(f => sectorBench[f] ?? 0)
     : undefined;
   const radarLabels = factorOrder.map(f => FACTOR_LABELS_EN[f] ?? f);
 
@@ -358,7 +367,7 @@ export function AssessmentPDF({ scores, role = 'leader' }: AssessmentPDFProps) {
           {!isFollower && (
             <View style={styles.legendItem}>
               <View style={[styles.legendDot, { backgroundColor: '#dc2626' }]} />
-              <Text style={styles.legendText}>Business Leader Benchmark</Text>
+              <Text style={styles.legendText}>{sectorLabel} Sector Benchmark</Text>
             </View>
           )}
         </View>
@@ -376,7 +385,7 @@ export function AssessmentPDF({ scores, role = 'leader' }: AssessmentPDFProps) {
             {factorOrder.map(factor => {
               const score    = scoreMap[factor] ?? 0;
               const hasBench = BENCHMARKED_FACTORS.has(factor);
-              const bench    = hasBench ? (BENCHMARKS as Record<string, number>)[factor] : null;
+              const bench    = hasBench ? sectorBench[factor] ?? null : null;
               const status   = bench != null ? getComparisonLabel(score, bench) : null;
               return (
                 <View key={factor} style={styles.tableRow}>
@@ -397,8 +406,8 @@ export function AssessmentPDF({ scores, role = 'leader' }: AssessmentPDFProps) {
           <Text style={styles.interpretTitle}>Score Interpretation</Text>
           <Text style={styles.interpretText}>
             {isFollower
-              ? 'Scores are means on a 1–5 Likert scale. Supportiveness and Weakness emerged uniquely in follower ratings; no population benchmarks exist for these two dimensions. For the five shared factors, scores are compared to business leader self-reports (Study 4).'
-              : 'Scores are means on a 1–5 Likert scale. Higher scores indicate stronger presence of that trait. For Psychopathy and Irritability, scores significantly above benchmark indicate a concern worth investigating. Benchmark values are from Study 4, Business sector leaders (Keshet, 2026).'}
+              ? `Scores are means on a 1–5 Likert scale. Supportiveness and Weakness emerged uniquely in follower ratings; no population benchmarks exist for these two dimensions. For the five shared factors, scores are compared to ${sectorLabel} sector leader self-reports (Study 4).`
+              : `Scores are means on a 1–5 Likert scale. Higher scores indicate stronger presence of that trait. For Psychopathy and Irritability, scores significantly above benchmark indicate a concern worth investigating. Benchmark values are from Study 4, ${sectorLabel} sector leaders (Keshet, 2026).`}
           </Text>
         </View>
 

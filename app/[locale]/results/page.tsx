@@ -6,10 +6,12 @@ import { useLocale } from 'next-intl';
 import dynamic from 'next/dynamic';
 import { Link } from '@/i18n/navigation';
 import { scoreAssessment, scoreFollowerAssessment, getComparisonLabel } from '@/lib/scoring';
-import { BENCHMARKS, FACTOR_ORDER, FOLLOWER_FACTOR_ORDER } from '@/lib/benchmarks';
-import type { FactorScores, FollowerScores, Role } from '@/lib/types';
+import { SECTOR_BENCHMARKS, FACTOR_ORDER, FOLLOWER_FACTOR_ORDER } from '@/lib/benchmarks';
+import type { FactorScores, FollowerScores, Role, Sector } from '@/lib/types';
 
 const ResultsRadar = dynamic(() => import('@/components/ResultsRadar'), { ssr: false });
+
+const SECTORS: Sector[] = ['business', 'military', 'religious'];
 
 const FACTOR_LABELS_EN: Record<string, string> = {
   energy: 'Energy', psychopathy: 'Psychopathy', organization: 'Organization',
@@ -47,9 +49,10 @@ function ScoreBar({ score, benchmark }: { score: number; benchmark?: number }) {
   );
 }
 
-function PDFDownloadButton({ scores, role, label, generatingLabel }: {
+function PDFDownloadButton({ scores, role, sector, label, generatingLabel }: {
   scores: FactorScores | FollowerScores;
   role: Role;
+  sector: Sector;
   label: string;
   generatingLabel: string;
 }) {
@@ -64,7 +67,7 @@ function PDFDownloadButton({ scores, role, label, generatingLabel }: {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const blob = await pdf(
-        React.createElement(AssessmentPDF, { scores: scores as FactorScores, role }) as any
+        React.createElement(AssessmentPDF, { scores: scores as FactorScores, role, sector }) as any
       ).toBlob();
 
       const url = URL.createObjectURL(blob);
@@ -101,6 +104,7 @@ export default function ResultsPage() {
   const locale = useLocale();
   const [scores, setScores] = useState<FactorScores | FollowerScores | null>(null);
   const [role, setRole] = useState<Role>('leader');
+  const [sector, setSector] = useState<Sector>('business');
   const factorLabels = locale === 'he' ? FACTOR_LABELS_HE : FACTOR_LABELS_EN;
 
   useEffect(() => {
@@ -137,26 +141,30 @@ export default function ResultsPage() {
     );
   }
 
-  const isFollower = role === 'follower';
-  const factorOrder = isFollower ? FOLLOWER_FACTOR_ORDER : FACTOR_ORDER;
-  const scoreMap = scores as Record<string, number>;
+  const isFollower   = role === 'follower';
+  const factorOrder  = isFollower ? FOLLOWER_FACTOR_ORDER : FACTOR_ORDER;
+  const scoreMap     = scores as Record<string, number>;
+  const selectedBench = SECTOR_BENCHMARKS[sector];
 
-  const titleKey    = isFollower ? 'followerTitle'    : 'leaderTitle';
-  const subtitleKey = isFollower ? 'followerSubtitle' : 'leaderSubtitle';
-  const profileVizDescKey = isFollower ? 'followerProfileVizDesc' : 'profileVizDesc';
-  const interpretDescKey  = isFollower ? 'followerInterpretDesc'  : 'interpretDesc';
+  const titleKey      = isFollower ? 'followerTitle'       : 'leaderTitle';
+  const subtitleKey   = isFollower ? 'followerSubtitle'    : 'leaderSubtitle';
+  const interpretDescKey = isFollower ? 'followerInterpretDesc' : 'interpretDesc';
 
-  const badgeColor = isFollower ? 'bg-purple-100 text-purple-700' : 'bg-green-100 text-green-700';
-  const scoreColor = isFollower ? 'text-purple-600' : 'text-blue-600';
-  const interpretBg     = isFollower ? 'bg-purple-50 border-purple-100' : 'bg-blue-50 border-blue-100';
-  const interpretTitle  = isFollower ? 'text-purple-900' : 'text-blue-900';
-  const interpretText   = isFollower ? 'text-purple-800' : 'text-blue-800';
+  const accentActive  = isFollower ? 'bg-purple-600 text-white' : 'bg-blue-600 text-white';
+  const badgeColor    = isFollower ? 'bg-purple-100 text-purple-700' : 'bg-green-100 text-green-700';
+  const scoreColor    = isFollower ? 'text-purple-600' : 'text-blue-600';
+  const interpretBg   = isFollower ? 'bg-purple-50 border-purple-100' : 'bg-blue-50 border-blue-100';
+  const interpretTitleColor = isFollower ? 'text-purple-900' : 'text-blue-900';
+  const interpretTextColor  = isFollower ? 'text-purple-800' : 'text-blue-800';
+
+  // Benchmark label for radar chart (dynamic per sector)
+  const radarBenchLabel = t(`benchmarkLabel_${sector}`);
 
   return (
     <div className="min-h-screen bg-slate-50 py-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
 
-        {/* Header */}
+        {/* ── Header ── */}
         <div className="text-center mb-10">
           <div className={`inline-flex items-center gap-2 ${badgeColor} text-xs font-semibold px-4 py-1.5 rounded-full mb-4`}>
             {t('assessmentComplete')}
@@ -165,26 +173,51 @@ export default function ResultsPage() {
           <p className="text-gray-500">{t(subtitleKey)}</p>
         </div>
 
-        {/* Radar Chart */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+        {/* ── Radar Chart + Sector Selector ── */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
           <h2 className="font-bold text-gray-900 mb-1 text-center">{t('profileViz')}</h2>
-          <p className="text-xs text-center text-gray-400 mb-4">{t(profileVizDescKey)}</p>
+
+          {/* Sector toggle */}
+          <div className="flex items-center justify-center gap-2 mt-2 mb-4 flex-wrap">
+            <span className="text-xs text-gray-400">{t('compareTo')}</span>
+            {SECTORS.map(s => (
+              <button
+                key={s}
+                onClick={() => setSector(s)}
+                className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
+                  sector === s
+                    ? accentActive
+                    : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                }`}
+              >
+                {t(`sector_${s}`)}
+              </button>
+            ))}
+          </div>
+
+          {/* Chart description */}
+          <p className="text-xs text-center text-gray-400 mb-4">
+            {isFollower
+              ? t('followerProfileVizDesc')
+              : t('profileVizDesc', { sector: t(`sector_${sector}`) })}
+          </p>
+
           <ResultsRadar
             scores={scoreMap}
             factorOrder={factorOrder as string[]}
             locale={locale}
             yourScoreLabel={t('yourScore')}
-            benchmarkLabel={isFollower ? undefined : t('benchmark')}
-            benchmarks={isFollower ? undefined : BENCHMARKS}
+            benchmarkLabel={isFollower ? undefined : radarBenchLabel}
+            benchmarks={isFollower ? undefined : selectedBench}
           />
         </div>
 
-        {/* Score cards */}
+        {/* ── Score cards ── */}
         <div className="space-y-4 mb-8">
           {factorOrder.map(factor => {
             const score = scoreMap[factor] ?? 0;
             const bench: number | undefined = BENCHMARKED_FACTORS.has(factor)
-              ? (BENCHMARKS as Record<string, number>)[factor]
+              ? (selectedBench as Record<string, number>)[factor]
               : undefined;
 
             const status = bench != null ? getComparisonLabel(score, bench) : null;
@@ -238,13 +271,13 @@ export default function ResultsPage() {
           })}
         </div>
 
-        {/* Interpretation note */}
+        {/* ── Interpretation note ── */}
         <div className={`border rounded-2xl p-5 mb-4 ${interpretBg}`}>
-          <h3 className={`font-bold mb-2 text-sm ${interpretTitle}`}>{t('interpretTitle')}</h3>
-          <p className={`text-sm leading-relaxed ${interpretText}`}>{t(interpretDescKey)}</p>
+          <h3 className={`font-bold mb-2 text-sm ${interpretTitleColor}`}>{t('interpretTitle')}</h3>
+          <p className={`text-sm leading-relaxed ${interpretTextColor}`}>{t(interpretDescKey)}</p>
         </div>
 
-        {/* Research disclaimer */}
+        {/* ── Research disclaimer ── */}
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-8 flex gap-3 items-start">
           <span className="text-base mt-0.5 shrink-0">⚠️</span>
           <div>
@@ -253,11 +286,12 @@ export default function ResultsPage() {
           </div>
         </div>
 
-        {/* Action buttons */}
+        {/* ── Action buttons ── */}
         <div className="flex flex-wrap gap-3 justify-center">
           <PDFDownloadButton
             scores={scores}
             role={role}
+            sector={sector}
             label={t('downloadPdf')}
             generatingLabel={t('generating')}
           />

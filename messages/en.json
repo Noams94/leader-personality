@@ -157,7 +157,7 @@
     "followerSubtitle": "Your supervisor's leadership personality based on your ratings.",
     "assessmentComplete": "✓ Assessment Complete",
     "profileViz": "Profile Visualization",
-    "profileVizDesc": "Blue = Your Score · Red dashed = Business Leader Benchmark",
+    "profileVizDesc": "Blue = your score · Red dashed = {sector} sector benchmark",
     "followerProfileVizDesc": "Seven-factor profile — follower ratings of supervisor",
     "benchmarkPrefix": "Benchmark:",
     "noBenchmark": "No reference data",
@@ -180,6 +180,13 @@
     "interpretDesc": "Scores are means on a 1–5 scale. Higher scores indicate stronger presence of that trait. For Psychopathy and Irritability, scores significantly above benchmark indicate a concern worth investigating.",
     "followerInterpretDesc": "Scores are means on a 1–5 scale. Supportiveness and Weakness emerged uniquely in follower ratings; no population benchmarks exist for these two dimensions. For the five shared factors, scores are compared to business leader self-reports (Study 4).",
     "disclaimerTitle": "Research Notice",
-    "disclaimerText": "This assessment is a research-based educational tool intended for self-reflection and professional development. Results reflect self-reported perceptions and should not be used as the sole basis for employment decisions, clinical evaluation, or organizational screening."
+    "disclaimerText": "This assessment is a research-based educational tool intended for self-reflection and professional development. Results reflect self-reported perceptions and should not be used as the sole basis for employment decisions, clinical evaluation, or organizational screening.",
+    "compareTo": "Compare against:",
+    "sector_business": "Business",
+    "sector_military": "Military",
+    "sector_religious": "Religious",
+    "benchmarkLabel_business": "Business leaders benchmark",
+    "benchmarkLabel_military": "Military leaders benchmark",
+    "benchmarkLabel_religious": "Religious leaders benchmark"
   }
 }

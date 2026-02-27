@@ -3,6 +3,7 @@ export type FollowerFactor = LeaderFactor | 'supportiveness' | 'weakness';
 export type Factor = FollowerFactor;
 
 export type Role = 'leader' | 'follower';
+export type Sector = 'business' | 'military' | 'religious';
 
 export interface AssessmentItem {
   id: string;
