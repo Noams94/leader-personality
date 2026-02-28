@@ -424,7 +424,16 @@ export default function AssessmentWizard() {
   };
 
   const progressPercent = ((itemIndex + 1) / totalItems) * 100;
-  const label = locale === 'he' ? currentItem.labelHe : currentItem.labelEn;
+
+  // Gender of the person being described:
+  //   • leader role  → respondent's own gender (they rate themselves)
+  //   • follower role → leader's gender (they rate their supervisor)
+  const adjectiveGender = isFollower ? leaderGender : respondentGender;
+  const label = locale !== 'he'
+    ? currentItem.labelEn
+    : adjectiveGender === 'female' && currentItem.labelHeFemale
+      ? currentItem.labelHeFemale
+      : currentItem.labelHe;
 
   // Gender-aware instructions
   const instructions = locale === 'he'

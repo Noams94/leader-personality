@@ -10,7 +10,8 @@ export interface AssessmentItem {
   id: string;
   factor: Factor;
   labelEn: string;
-  labelHe: string;
+  labelHe: string;         // masculine / gender-neutral form
+  labelHeFemale?: string;  // feminine form (omit only if identical to labelHe)
   reversed: boolean;
 }
 
