@@ -29,7 +29,7 @@ const FACTOR_DETAIL_KEYS = [
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="mb-16">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6 pb-3 border-b border-gray-100">{title}</h2>
+      <h2 className="text-2xl font-bold tracking-tight text-gray-900 mb-6 pb-3 border-b border-gray-100">{title}</h2>
       {children}
     </section>
   );
@@ -43,7 +43,7 @@ export default function ResearchPage() {
       {/* Page header */}
       <div className="mb-14">
         <div className="text-sm font-medium text-blue-600 mb-2">{t('phdBadge')}</div>
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">{t('title')}</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 mb-4">{t('title')}</h1>
         <p className="text-xl text-gray-500 leading-relaxed">{t('subtitle')}</p>
       </div>
 
@@ -81,7 +81,7 @@ export default function ResearchPage() {
             { title: t('study2Title'), desc: t('study2Desc'), badge: t('study2Badge') },
             { title: t('study4Title'), desc: t('study4Desc'), badge: t('study4Badge') },
           ].map(s => (
-            <div key={s.badge} className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+            <div key={s.badge} className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
               <span className="inline-block text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full mb-3">
                 {s.badge}
               </span>
@@ -108,7 +108,7 @@ export default function ResearchPage() {
             </thead>
             <tbody>
               {SECTOR_TABLE.map((row, i) => (
-                <tr key={row.key} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}>
+                <tr key={row.key} className={`transition-colors duration-200 hover:bg-blue-50/50 ${i % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
                   <td className="py-3 px-4 font-semibold text-gray-800">
                     {t(row.key as 'business')}
                   </td>
@@ -129,7 +129,7 @@ export default function ResearchPage() {
       <Section title={t('fiveFactorTitle')}>
         <div className="grid grid-cols-1 gap-4">
           {FACTOR_DETAIL_KEYS.map(f => (
-            <div key={f.key} className="flex gap-4 p-5 bg-white border border-gray-100 rounded-xl shadow-sm">
+            <div key={f.key} className="flex gap-4 p-5 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
               <div className="text-2xl flex-shrink-0 mt-0.5">{f.emoji}</div>
               <div>
                 <h3 className="font-bold text-gray-900 mb-1">

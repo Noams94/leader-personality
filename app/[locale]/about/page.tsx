@@ -59,7 +59,7 @@ export default function AboutPage() {
             <h2 className="text-xl font-bold text-gray-900 mb-4">{t('keyFindingsTitle')}</h2>
             <div className="space-y-3">
               {[t('finding1'), t('finding2'), t('finding3'), t('finding4')].map((finding, i) => (
-                <div key={i} className="flex gap-3 p-4 bg-white border border-gray-100 rounded-xl shadow-sm">
+                <div key={i} className="flex gap-3 p-4 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
                   <div className="w-6 h-6 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
                     {i + 1}
                   </div>
@@ -75,7 +75,7 @@ export default function AboutPage() {
             <p className="text-gray-600 leading-relaxed mb-6">{t('sectorsDesc')}</p>
             <div className="grid grid-cols-3 gap-4">
               {sectors.map(s => (
-                <div key={s.name} className="text-center p-4 bg-slate-50 rounded-xl border border-gray-100">
+                <div key={s.name} className="text-center p-4 bg-slate-50 rounded-xl border border-gray-100 hover:scale-[1.03] hover:shadow-sm transition-all duration-300">
                   <div className="text-3xl mb-2">{s.icon}</div>
                   <div className="font-semibold text-gray-800 text-sm">{s.name}</div>
                   <div className="text-gray-400 text-xs">{s.sub}</div>
@@ -93,7 +93,7 @@ export default function AboutPage() {
             <p className="text-blue-100 text-sm mb-5 leading-relaxed">{t('contactDesc')}</p>
             <a
               href="mailto:keshet.noam@gmail.com"
-              className="block text-center bg-white text-blue-600 font-semibold py-2.5 px-4 rounded-xl text-sm hover:bg-blue-50 transition-colors"
+              className="block text-center bg-white text-blue-600 font-semibold py-2.5 px-4 rounded-xl text-sm hover:bg-blue-50 hover:-translate-y-0.5 transition-all duration-300"
             >
               {t('contactButton')}
             </a>
@@ -105,7 +105,7 @@ export default function AboutPage() {
             <p className="text-gray-500 text-sm mb-4 leading-relaxed">{t('assessmentCtaDesc')}</p>
             <Link
               href="/assessment"
-              className="block text-center bg-blue-600 text-white font-semibold py-2.5 px-4 rounded-xl text-sm hover:bg-blue-700 transition-colors"
+              className="block text-center bg-blue-600 text-white font-semibold py-2.5 px-4 rounded-xl text-sm hover:bg-blue-700 hover:-translate-y-0.5 transition-all duration-300"
             >
               {t('assessmentCtaButton')}
             </Link>
