@@ -169,7 +169,14 @@
     "industryLabel": "Industry",
     "orgSizeLabel": "Organization size",
     "experienceLeaderLabel": "Years of management experience",
-    "experienceFollowerLabel": "Years with this supervisor"
+    "experienceFollowerLabel": "Years with this supervisor",
+    "consentTitle": "Informed Consent",
+    "consentIntro": "Before you begin, please note the following:",
+    "consentBullet1": "Your responses will be saved anonymously for academic research purposes.",
+    "consentBullet2": "No personally identifying information is collected.",
+    "consentBullet3": "Participation is completely voluntary. You may stop at any time.",
+    "consentAgree": "I Agree — Start the Assessment",
+    "consentDecline": "No thanks, I prefer not to participate"
   },
   "results": {
     "leaderTitle": "Your Leadership Profile",

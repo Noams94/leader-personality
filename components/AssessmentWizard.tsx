@@ -6,7 +6,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { ITEMS, LEADER_FACTOR_KEYS, FOLLOWER_FACTOR_KEYS } from '@/lib/items';
 import type { Responses, Role, Gender } from '@/lib/types';
 
-type Screen = 'role' | 'gender' | 'leaderGender' | 'demographics' | 'quiz';
+type Screen = 'consent' | 'role' | 'gender' | 'leaderGender' | 'demographics' | 'quiz';
 
 interface Demographics {
   age: string;
@@ -138,7 +138,7 @@ export default function AssessmentWizard() {
   const isRtl  = locale === 'he';
 
   // Screen state machine
-  const [screen, setScreen]                   = useState<Screen>('role');
+  const [screen, setScreen]                   = useState<Screen>('consent');
   const [role, setRole]                       = useState<Role>('leader');
   const [respondentGender, setRespondentGender] = useState<Gender>('other');
   const [leaderGender, setLeaderGender]       = useState<Gender>('other');
@@ -173,6 +173,47 @@ export default function AssessmentWizard() {
   const accentRing    = isFollower ? 'ring-purple-400'        : 'ring-blue-400';
   const hoverBorder   = isFollower ? 'hover:border-purple-500' : 'hover:border-blue-500';
   const focusRing     = isFollower ? 'focus:ring-purple-500' : 'focus:ring-blue-500';
+
+  // ── Screen: Consent ───────────────────────────────────────────────────────────
+  if (screen === 'consent') {
+    return (
+      <div className="max-w-lg mx-auto">
+        <div className="text-center mb-8">
+          <div className="text-4xl mb-4">📄</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('consentTitle')}</h2>
+          <p className="text-gray-500 text-sm leading-relaxed">{t('consentIntro')}</p>
+        </div>
+
+        <div className="bg-blue-50 border border-blue-100 rounded-2xl p-6 mb-8 space-y-4">
+          {[t('consentBullet1'), t('consentBullet2'), t('consentBullet3')].map((bullet, i) => (
+            <div key={i} className="flex gap-3 items-start">
+              <div className="w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                ✓
+              </div>
+              <p className="text-blue-900 text-sm leading-relaxed">{bullet}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex flex-col gap-3">
+          <button
+            type="button"
+            onClick={() => setScreen('role')}
+            className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 hover:-translate-y-0.5 text-white font-semibold rounded-xl transition-all duration-200 shadow-sm"
+          >
+            {t('consentAgree')}
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push('/')}
+            className="w-full py-2 text-sm text-gray-400 hover:text-gray-500 transition-colors"
+          >
+            {t('consentDecline')}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // ── Screen: Role ──────────────────────────────────────────────────────────────
   if (screen === 'role') {
@@ -399,9 +440,25 @@ export default function AssessmentWizard() {
         sessionStorage.setItem('assessmentRole',            role);
         sessionStorage.setItem('assessmentRespondentGender', respondentGender);
         sessionStorage.setItem('assessmentLeaderGender',    leaderGender);
-        if (Object.values(demographics).some(v => v)) {
+        const hasDemographics = Object.values(demographics).some(v => v);
+        if (hasDemographics) {
           sessionStorage.setItem('assessmentDemographics', JSON.stringify(demographics));
         }
+
+        // Fire-and-forget — save to Supabase (does not block navigation)
+        fetch('/api/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            role,
+            respondentGender,
+            leaderGender,
+            locale,
+            responses: newResponses,
+            demographics: hasDemographics ? demographics : null,
+          }),
+        }).catch(() => { /* fail silently — UX unaffected */ });
+
         router.push('/results');
       }, 450);
       return;

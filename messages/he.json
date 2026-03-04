@@ -169,7 +169,14 @@
     "industryLabel": "תחום עיסוק",
     "orgSizeLabel": "גודל הארגון",
     "experienceLeaderLabel": "שנות ניסיון ניהולי",
-    "experienceFollowerLabel": "שנות עבודה תחת מנהל/ת זה/ו"
+    "experienceFollowerLabel": "שנות עבודה תחת מנהל/ת זה/ו",
+    "consentTitle": "הסכמה מדעת",
+    "consentIntro": "לפני שמתחילים, אנא שימו לב לפרטים הבאים:",
+    "consentBullet1": "תשובותיכם יישמרו באופן אנונימי למטרות מחקר אקדמי.",
+    "consentBullet2": "לא נאסף כל מידע מזהה אישי.",
+    "consentBullet3": "ההשתתפות רצונית לחלוטין. ניתן להפסיק בכל עת.",
+    "consentAgree": "אני מסכימ/ה — התחלת השאלון",
+    "consentDecline": "לא תודה, אעדיף לא להשתתף"
   },
   "results": {
     "leaderTitle": "הפרופיל המנהיגותי שלכם",
