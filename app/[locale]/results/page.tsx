@@ -35,7 +35,7 @@ function ScoreBar({ score, benchmark }: { score: number; benchmark?: number }) {
   return (
     <div className="relative h-2 bg-gray-200 rounded-full overflow-visible mt-2">
       <div
-        className="h-full bg-blue-600 rounded-full"
+        className="h-full bg-blue-500 rounded-full"
         style={{ width: `${(score / 5) * 100}%` }}
       />
       {benchmark != null && (
@@ -88,7 +88,7 @@ function PDFDownloadButton({ scores, role, sector, label, generatingLabel }: {
       onClick={handleDownload}
       disabled={loading}
       className="flex items-center gap-2 px-6 py-3 bg-slate-800 text-white rounded-xl font-semibold text-sm
-        hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm"
+        hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 ease-in-out shadow-sm"
     >
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -137,7 +137,7 @@ export default function ResultsPage() {
         <h1 className="text-xl font-bold text-gray-900 mb-2">{t('noData')}</h1>
         <Link
           href="/assessment"
-          className="mt-4 px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold text-sm hover:bg-blue-700 transition-colors"
+          className="mt-4 px-6 py-3 bg-blue-500 text-white rounded-xl font-semibold text-sm hover:bg-blue-600 transition-all duration-300 ease-in-out"
         >
           {t('goToAssessment')}
         </Link>
@@ -170,9 +170,9 @@ export default function ResultsPage() {
 
   const interpretDescKey = isFollower ? 'followerInterpretDesc' : 'interpretDesc';
 
-  const accentActive  = isFollower ? 'bg-purple-600 text-white' : 'bg-blue-600 text-white';
+  const accentActive  = isFollower ? 'bg-purple-600 text-white' : 'bg-blue-500 text-white';
   const badgeColor    = isFollower ? 'bg-purple-100 text-purple-700' : 'bg-green-100 text-green-700';
-  const scoreColor    = isFollower ? 'text-purple-600' : 'text-blue-600';
+  const scoreColor    = isFollower ? 'text-purple-600' : 'text-blue-500';
   const interpretBg   = isFollower ? 'bg-purple-50 border-purple-100' : 'bg-blue-50 border-blue-100';
   const interpretTitleColor = isFollower ? 'text-purple-900' : 'text-blue-900';
   const interpretTextColor  = isFollower ? 'text-purple-800' : 'text-blue-800';
@@ -189,12 +189,12 @@ export default function ResultsPage() {
           <div className={`inline-flex items-center gap-2 ${badgeColor} text-xs font-semibold px-4 py-1.5 rounded-full mb-4`}>
             {t('assessmentComplete')}
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{t(titleKey)}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tighter text-gray-900 mb-2">{t(titleKey)}</h1>
           <p className="text-gray-500">{t(subtitleKey)}</p>
         </div>
 
         {/* ── Radar Chart + Sector Selector ── */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6 ai-glow">
           <h2 className="font-bold text-gray-900 mb-1 text-center">{t('profileViz')}</h2>
 
           {/* Sector toggle */}
@@ -204,7 +204,7 @@ export default function ResultsPage() {
               <button
                 key={s}
                 onClick={() => setSector(s)}
-                className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
+                className={`px-3 py-1 rounded-full text-xs font-semibold transition-all duration-300 ease-in-out ${
                   sector === s
                     ? accentActive
                     : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
@@ -317,13 +317,13 @@ export default function ResultsPage() {
           />
           <Link
             href="/assessment"
-            className="flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl font-semibold text-sm hover:bg-gray-50 transition-colors shadow-sm"
+            className="flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl font-semibold text-sm hover:bg-gray-50 transition-all duration-300 ease-in-out shadow-sm"
           >
             ↺ {t('retake')}
           </Link>
           <Link
             href="/research"
-            className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold text-sm hover:bg-blue-700 transition-colors shadow-sm"
+            className="flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-xl font-semibold text-sm hover:bg-blue-600 transition-all duration-300 ease-in-out shadow-sm"
           >
             {t('exploreResearch')}
           </Link>

@@ -91,7 +91,7 @@ function GenderCard({
       onClick={onClick}
       className={`group flex items-center gap-4 w-full text-start p-5 bg-white
         rounded-2xl border-2 border-gray-100 ${hoverBorderClass} hover:shadow-md
-        transition-all duration-200 focus:outline-none focus:ring-2 ${focusRingClass}`}
+        transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 ${focusRingClass}`}
     >
       <span className="text-3xl">{emoji}</span>
       <span className="font-semibold text-gray-900 text-base group-hover:text-gray-600 transition-colors">
@@ -175,8 +175,8 @@ export default function AssessmentWizard() {
 
   // Accent colours (role-based, stable after role screen)
   const isFollower    = role === 'follower';
-  const accentBg      = isFollower ? 'bg-purple-600'         : 'bg-blue-600';
-  const accentHover   = isFollower ? 'hover:bg-purple-500'   : 'hover:bg-blue-500';
+  const accentBg      = isFollower ? 'bg-purple-600'         : 'bg-blue-500';
+  const accentHover   = isFollower ? 'hover:bg-purple-500'   : 'hover:bg-blue-400';
   const accentRing    = isFollower ? 'ring-purple-400'        : 'ring-blue-400';
   const hoverBorder   = isFollower ? 'hover:border-purple-500' : 'hover:border-blue-500';
   const focusRing     = isFollower ? 'focus:ring-purple-500' : 'focus:ring-blue-500';
@@ -194,7 +194,7 @@ export default function AssessmentWizard() {
         <div className="bg-blue-50 border border-blue-100 rounded-2xl p-6 mb-8 space-y-4">
           {[t('consentBullet1'), t('consentBullet2'), t('consentBullet3')].map((bullet, i) => (
             <div key={i} className="flex gap-3 items-start">
-              <div className="w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+              <div className="w-5 h-5 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
                 ✓
               </div>
               <p className="text-blue-900 text-sm leading-relaxed">{bullet}</p>
@@ -206,7 +206,7 @@ export default function AssessmentWizard() {
           <button
             type="button"
             onClick={() => setScreen('role')}
-            className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 hover:-translate-y-0.5 text-white font-semibold rounded-xl transition-all duration-200 shadow-sm"
+            className="w-full py-3.5 bg-blue-500 hover:bg-blue-400 hover:-translate-y-0.5 text-white font-semibold rounded-xl transition-all duration-300 ease-in-out shadow-sm"
           >
             {t('consentAgree')}
           </button>
@@ -238,7 +238,7 @@ export default function AssessmentWizard() {
             type="button"
             onClick={() => { setRole('leader'); setScreen('gender'); }}
             className="group text-start p-8 bg-white rounded-2xl border-2 border-gray-100
-              hover:border-blue-500 hover:shadow-lg transition-all duration-200
+              hover:border-blue-500 hover:shadow-lg transition-all duration-300 ease-in-out
               focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <div className="text-5xl mb-4">👔</div>
@@ -257,7 +257,7 @@ export default function AssessmentWizard() {
             type="button"
             onClick={() => { setRole('follower'); setScreen('gender'); }}
             className="group text-start p-8 bg-white rounded-2xl border-2 border-gray-100
-              hover:border-purple-500 hover:shadow-lg transition-all duration-200
+              hover:border-purple-500 hover:shadow-lg transition-all duration-300 ease-in-out
               focus:outline-none focus:ring-2 focus:ring-purple-500"
           >
             <div className="text-5xl mb-4">👥</div>
@@ -600,7 +600,7 @@ export default function AssessmentWizard() {
 
       {/* Item card — fades between items */}
       <div className={`transition-opacity duration-200 ${fading ? 'opacity-0' : 'opacity-100'}`}>
-        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 px-8 py-12 mb-6 text-center">
+        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 px-8 py-12 mb-6 text-center ai-glow">
 
           {/* The adjective */}
           <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-12 tracking-tight">

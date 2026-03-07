@@ -30,13 +30,13 @@ export default function HomePage() {
     <>
       {/* ── HERO ─────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(37,99,235,0.2),transparent_60%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(139,92,246,0.15),rgba(59,130,246,0.1)_40%,transparent_70%)]" />
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-28 sm:py-36 text-center">
           <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-medium px-4 py-2 rounded-full mb-8">
             <span className="w-1.5 h-1.5 bg-blue-400 rounded-full inline-block" />
             {t('heroBadge')}
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight mb-6">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tighter text-white leading-tight mb-6">
             {t('heroTitle')}
           </h1>
           <p className="text-lg sm:text-xl text-blue-100/80 max-w-2xl mx-auto leading-relaxed mb-10">
@@ -45,13 +45,13 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/assessment"
-              className="px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl shadow-lg shadow-blue-900/30 hover:shadow-xl hover:-translate-y-0.5 hover:brightness-110 transition-all duration-300 text-base"
+              className="px-8 py-4 bg-blue-500 hover:bg-blue-400 text-white font-semibold rounded-xl shadow-lg shadow-blue-900/30 hover:shadow-xl hover:-translate-y-0.5 hover:brightness-110 transition-all duration-300 ease-in-out text-base"
             >
               {t('heroCta')}
             </Link>
             <Link
               href="/research"
-              className="px-8 py-4 bg-white/10 hover:bg-white/15 text-white font-semibold rounded-xl border border-white/20 hover:-translate-y-0.5 transition-all duration-300 text-base"
+              className="px-8 py-4 bg-white/10 hover:bg-white/15 text-white font-semibold rounded-xl border border-white/20 hover:-translate-y-0.5 transition-all duration-300 ease-in-out text-base"
             >
               {t('heroSecondary')}
             </Link>
@@ -62,7 +62,7 @@ export default function HomePage() {
       {/* ── VIDEO EMBED ──────────────────────────────────────────── */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 py-20">
         <AnimateIn className="text-center mb-10">
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 mb-3">{t('videoTitle')}</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tighter text-gray-900 mb-3">{t('videoTitle')}</h2>
           <p className="text-gray-500">{t('videoDesc')}</p>
         </AnimateIn>
         <AnimateIn delay={100}>
@@ -79,16 +79,16 @@ export default function HomePage() {
       </section>
 
       {/* ── FIVE FACTORS ─────────────────────────────────────────── */}
-      <section className="bg-slate-50 py-20">
+      <section className="bg-slate-50 py-20 ai-glow">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <AnimateIn className="text-center mb-14">
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 mb-3">{t('factorsTitle')}</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tighter text-gray-900 mb-3">{t('factorsTitle')}</h2>
             <p className="text-gray-500 max-w-xl mx-auto">{t('factorsDesc')}</p>
           </AnimateIn>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {FACTOR_KEYS.map((key, i) => (
               <AnimateIn key={key} delay={i * 60}>
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:scale-[1.02] hover:-translate-y-0.5 transition-all duration-300 h-full">
+                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:scale-[1.02] hover:-translate-y-0.5 transition-all duration-300 ease-in-out h-full">
                   <div className="text-3xl mb-3">{tf(`${key}.emoji`)}</div>
                   <h3 className="font-bold text-gray-900 text-lg mb-2">{tf(`${key}.name`)}</h3>
                   <p className="text-gray-500 text-sm leading-relaxed">{tf(`${key}.desc`)}</p>
@@ -97,7 +97,7 @@ export default function HomePage() {
             ))}
             {/* CTA card as 6th slot */}
             <AnimateIn delay={300}>
-              <div className="bg-blue-600 rounded-2xl p-6 shadow-sm hover:shadow-md hover:scale-[1.02] hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between h-full">
+              <div className="bg-gradient-to-br from-blue-500 to-violet-600 rounded-2xl p-6 shadow-sm hover:shadow-md hover:scale-[1.02] hover:-translate-y-0.5 transition-all duration-300 ease-in-out flex flex-col justify-between h-full">
                 <div>
                   <div className="text-3xl mb-3">📋</div>
                   <h3 className="font-bold text-white text-lg mb-2">{t('ctaTitle')}</h3>
@@ -105,7 +105,7 @@ export default function HomePage() {
                 </div>
                 <Link
                   href="/assessment"
-                  className="mt-4 inline-block text-center bg-white text-blue-600 font-semibold px-5 py-2.5 rounded-xl text-sm hover:bg-blue-50 hover:-translate-y-0.5 transition-all duration-300"
+                  className="mt-4 inline-block text-center bg-white text-blue-500 font-semibold px-5 py-2.5 rounded-xl text-sm hover:bg-blue-50 hover:-translate-y-0.5 transition-all duration-300 ease-in-out"
                 >
                   {t('ctaButton')}
                 </Link>
@@ -118,7 +118,7 @@ export default function HomePage() {
       {/* ── SECTOR COMPARISON ────────────────────────────────────── */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-20">
         <AnimateIn className="text-center mb-14">
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 mb-3">{t('sectorTitle')}</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tighter text-gray-900 mb-3">{t('sectorTitle')}</h2>
           <p className="text-gray-500 max-w-xl mx-auto">{t('sectorDesc')}</p>
         </AnimateIn>
         <AnimateIn delay={100}>
@@ -155,13 +155,13 @@ export default function HomePage() {
       </section>
 
       {/* ── BOTTOM CTA ───────────────────────────────────────────── */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-700 py-20">
+      <section className="bg-gradient-to-r from-blue-500 via-blue-600 to-violet-600 py-20">
         <AnimateIn className="max-w-2xl mx-auto px-4 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white mb-4">{t('ctaTitle')}</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tighter text-white mb-4">{t('ctaTitle')}</h2>
           <p className="text-blue-100 mb-8 text-lg">{t('ctaDesc')}</p>
           <Link
             href="/assessment"
-            className="inline-block px-10 py-4 bg-white text-blue-600 font-bold rounded-xl shadow-lg hover:bg-blue-50 hover:-translate-y-0.5 hover:shadow-xl transition-all duration-300 text-base"
+            className="inline-block px-10 py-4 bg-white text-blue-500 font-bold rounded-xl shadow-lg hover:bg-blue-50 hover:-translate-y-0.5 hover:shadow-xl transition-all duration-300 ease-in-out text-base"
           >
             {t('ctaButton')} →
           </Link>
