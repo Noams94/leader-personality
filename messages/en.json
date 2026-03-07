@@ -176,7 +176,16 @@
     "consentBullet2": "No personally identifying information is collected.",
     "consentBullet3": "Participation is completely voluntary. You may stop at any time.",
     "consentAgree": "I Agree — Start the Assessment",
-    "consentDecline": "No thanks, I prefer not to participate"
+    "consentDecline": "No thanks, I prefer not to participate",
+    "leaderTimeEstimate": "5 min",
+    "followerTimeEstimate": "7 min",
+    "milestone25": "Great start! 25% done",
+    "milestone50": "Halfway there!",
+    "milestone75": "Almost done! Just a few more",
+    "straightLineTitle": "All Identical Answers",
+    "straightLineDesc": "It looks like all your answers are the same. This may affect the accuracy of your results. Would you like to go back and reconsider some responses?",
+    "straightLineGoBack": "Go Back & Review",
+    "straightLineContinue": "Submit as-is"
   },
   "results": {
     "leaderTitle": "Your Leadership Profile",

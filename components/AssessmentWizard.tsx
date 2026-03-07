@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { useRouter } from '@/i18n/navigation';
 import { useTranslations, useLocale } from 'next-intl';
 import { ITEMS, LEADER_FACTOR_KEYS, FOLLOWER_FACTOR_KEYS } from '@/lib/items';
@@ -152,6 +152,13 @@ export default function AssessmentWizard() {
   const [seed]                    = useState(() => Math.floor(Math.random() * 1000));
   const [fading, setFading]       = useState(false);
 
+  // Response time tracking (ms per item)
+  const [responseTimes, setResponseTimes] = useState<Record<string, number>>({});
+  const itemShownAt = useRef<number>(Date.now());
+
+  // Straight-line warning
+  const [showStraightLineWarning, setShowStraightLineWarning] = useState(false);
+
   // Compute item list only when quiz starts (deps stable during quiz)
   const allItems = useMemo(() => {
     if (screen !== 'quiz') return [];
@@ -239,8 +246,9 @@ export default function AssessmentWizard() {
               {t('leaderCard')}
             </h3>
             <p className="text-gray-500 text-sm leading-relaxed">{t('leaderCardDesc')}</p>
-            <div className="mt-4 text-xs font-semibold text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity">
-              {t('leaderCardHint')} →
+            <div className="mt-4 flex items-center justify-between">
+              <span className="text-xs text-gray-400">{t('leaderCardHint')}</span>
+              <span className="text-xs text-gray-400">~{t('leaderTimeEstimate')}</span>
             </div>
           </button>
 
@@ -257,8 +265,9 @@ export default function AssessmentWizard() {
               {t('followerCard')}
             </h3>
             <p className="text-gray-500 text-sm leading-relaxed">{t('followerCardDesc')}</p>
-            <div className="mt-4 text-xs font-semibold text-purple-500 opacity-0 group-hover:opacity-100 transition-opacity">
-              {t('followerCardHint')} →
+            <div className="mt-4 flex items-center justify-between">
+              <span className="text-xs text-gray-400">{t('followerCardHint')}</span>
+              <span className="text-xs text-gray-400">~{t('followerTimeEstimate')}</span>
             </div>
           </button>
         </div>
@@ -429,53 +438,79 @@ export default function AssessmentWizard() {
   // ── Screen: Quiz ──────────────────────────────────────────────────────────────
   if (screen !== 'quiz' || !currentItem) return null;
 
+  // Helper: check if all responses are the same value (straight-lining)
+  const isStraightLine = (resp: Responses): boolean => {
+    const vals = Object.values(resp);
+    if (vals.length < 10) return false;
+    return vals.every(v => v === vals[0]);
+  };
+
+  // Helper: finalize and submit
+  const finalizeSubmission = (finalResponses: Responses, finalTimes: Record<string, number>) => {
+    sessionStorage.setItem('assessmentResponses',       JSON.stringify(finalResponses));
+    sessionStorage.setItem('assessmentRole',            role);
+    sessionStorage.setItem('assessmentRespondentGender', respondentGender);
+    sessionStorage.setItem('assessmentLeaderGender',    leaderGender);
+    const hasDemographics = Object.values(demographics).some(v => v);
+    if (hasDemographics) {
+      sessionStorage.setItem('assessmentDemographics', JSON.stringify(demographics));
+    }
+
+    // Fire-and-forget — save to Supabase (does not block navigation)
+    fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        role,
+        respondentGender,
+        leaderGender,
+        locale,
+        responses: finalResponses,
+        responseTimes: finalTimes,
+        demographics: hasDemographics ? demographics : null,
+      }),
+    }).catch(() => { /* fail silently — UX unaffected */ });
+
+    router.push('/results');
+  };
+
   const handleSelect = (value: number) => {
     if (fading || !currentItem) return;
+
+    // Track response time for this item
+    const elapsed = Date.now() - itemShownAt.current;
+    const newTimes = { ...responseTimes, [currentItem.id]: elapsed };
+    setResponseTimes(newTimes);
+
     const newResponses = { ...responses, [currentItem.id]: value };
     setResponses(newResponses);
 
     if (isLast) {
-      setTimeout(() => {
-        sessionStorage.setItem('assessmentResponses',       JSON.stringify(newResponses));
-        sessionStorage.setItem('assessmentRole',            role);
-        sessionStorage.setItem('assessmentRespondentGender', respondentGender);
-        sessionStorage.setItem('assessmentLeaderGender',    leaderGender);
-        const hasDemographics = Object.values(demographics).some(v => v);
-        if (hasDemographics) {
-          sessionStorage.setItem('assessmentDemographics', JSON.stringify(demographics));
-        }
+      // Check for straight-line pattern before submitting
+      if (isStraightLine(newResponses) && !showStraightLineWarning) {
+        setShowStraightLineWarning(true);
+        return;
+      }
 
-        // Fire-and-forget — save to Supabase (does not block navigation)
-        fetch('/api/submit', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            role,
-            respondentGender,
-            leaderGender,
-            locale,
-            responses: newResponses,
-            demographics: hasDemographics ? demographics : null,
-          }),
-        }).catch(() => { /* fail silently — UX unaffected */ });
-
-        router.push('/results');
-      }, 450);
+      setTimeout(() => finalizeSubmission(newResponses, newTimes), 450);
       return;
     }
 
     setFading(true);
     setTimeout(() => {
       setItemIndex(i => i + 1);
+      itemShownAt.current = Date.now();
       setFading(false);
     }, 200);
   };
 
   const handleBack = () => {
     if (itemIndex === 0 || fading) return;
+    setShowStraightLineWarning(false);
     setFading(true);
     setTimeout(() => {
       setItemIndex(i => i - 1);
+      itemShownAt.current = Date.now();
       setFading(false);
     }, 150);
   };
@@ -513,6 +548,50 @@ export default function AssessmentWizard() {
           />
         </div>
       </div>
+
+      {/* Straight-line warning overlay */}
+      {showStraightLineWarning && (
+        <div className="mb-6 bg-amber-50 border border-amber-200 rounded-2xl p-6 text-center">
+          <div className="text-3xl mb-3">⚠️</div>
+          <h3 className="font-bold text-amber-900 mb-2">{t('straightLineTitle')}</h3>
+          <p className="text-amber-800 text-sm mb-4 leading-relaxed">{t('straightLineDesc')}</p>
+          <div className="flex flex-col gap-2">
+            <button
+              onClick={() => { setShowStraightLineWarning(false); handleBack(); }}
+              className={`w-full py-2.5 rounded-xl text-sm font-semibold text-white ${accentBg} ${accentHover} transition-colors`}
+            >
+              {t('straightLineGoBack')}
+            </button>
+            <button
+              onClick={() => {
+                setShowStraightLineWarning(false);
+                setTimeout(() => finalizeSubmission(responses, responseTimes), 450);
+              }}
+              className="w-full py-2 rounded-xl text-sm text-gray-400 hover:text-gray-500 transition-colors"
+            >
+              {t('straightLineContinue')}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Progress milestone messages */}
+      {!showStraightLineWarning && (() => {
+        const pct = Math.round(progressPercent);
+        const milestoneKey = pct >= 75 && pct < 80 ? 'milestone75'
+                           : pct >= 50 && pct < 55 ? 'milestone50'
+                           : pct >= 25 && pct < 30 ? 'milestone25'
+                           : null;
+        if (!milestoneKey) return null;
+        return (
+          <div className="mb-4 text-center">
+            <span className={`inline-block px-4 py-1.5 rounded-full text-xs font-medium
+              ${isFollower ? 'bg-purple-50 text-purple-600' : 'bg-blue-50 text-blue-600'}`}>
+              {t(milestoneKey)}
+            </span>
+          </div>
+        );
+      })()}
 
       {/* Instructions */}
       <p className="text-center text-xs text-gray-400 mb-6 italic leading-relaxed px-2">

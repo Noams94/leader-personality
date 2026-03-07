@@ -176,7 +176,16 @@
     "consentBullet2": "לא נאסף כל מידע מזהה אישי.",
     "consentBullet3": "ההשתתפות רצונית לחלוטין. ניתן להפסיק בכל עת.",
     "consentAgree": "אני מסכימ/ה — התחלת השאלון",
-    "consentDecline": "לא תודה, אעדיף לא להשתתף"
+    "consentDecline": "לא תודה, אעדיף לא להשתתף",
+    "leaderTimeEstimate": "5 דק׳",
+    "followerTimeEstimate": "7 דק׳",
+    "milestone25": "התחלה מצוינת! 25% הושלמו",
+    "milestone50": "באמצע הדרך!",
+    "milestone75": "כמעט שם! עוד קצת",
+    "straightLineTitle": "כל התשובות זהות",
+    "straightLineDesc": "נראה שכל התשובות שלך זהות. זה עלול להשפיע על דיוק התוצאות. לחזור ולשקול חלק מהתשובות?",
+    "straightLineGoBack": "לחזור ולעיין מחדש",
+    "straightLineContinue": "להגיש כמו שזה"
   },
   "results": {
     "leaderTitle": "הפרופיל המנהיגותי שלכם",
