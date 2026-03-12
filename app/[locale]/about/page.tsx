@@ -99,6 +99,31 @@ export default function AboutPage() {
             </a>
           </div>
 
+          {/* Featured In */}
+          <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-300 ease-in-out">
+            <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
+              {t('featuredTitle')}
+            </h4>
+            <div className="flex gap-3 items-start">
+              <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center text-lg flex-shrink-0">
+                🎓
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-blue-500 font-medium">{t('interviewSource')}</p>
+                <p className="font-semibold text-gray-900 text-sm mt-0.5 leading-snug">{t('interviewTitle')}</p>
+                <p className="text-gray-500 text-xs mt-1 leading-relaxed">{t('interviewDesc')}</p>
+                <a
+                  href="https://bschool-en.huji.ac.il/blog/how-would-you-define-leader"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block mt-2 text-xs font-semibold text-blue-500 hover:text-blue-600 transition-colors"
+                >
+                  {t('interviewLink')}
+                </a>
+              </div>
+            </div>
+          </div>
+
           {/* Assessment CTA */}
           <div className="bg-slate-50 border border-gray-100 rounded-2xl p-6">
             <h3 className="font-bold text-gray-900 mb-2">{t('assessmentCtaTitle')}</h3>
