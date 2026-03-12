@@ -159,13 +159,12 @@ export default function AssessmentWizard() {
   // Straight-line warning
   const [showStraightLineWarning, setShowStraightLineWarning] = useState(false);
 
-  // Compute item list only when quiz starts (deps stable during quiz)
+  // Compute item list only when quiz starts — fully randomised across all factors
   const allItems = useMemo(() => {
     if (screen !== 'quiz') return [];
     const keys = role === 'follower' ? FOLLOWER_FACTOR_KEYS : LEADER_FACTOR_KEYS;
-    return keys.flatMap((factor, fi) =>
-      seededShuffle(ITEMS.filter(i => i.factor === factor), seed + fi)
-    );
+    const filtered = ITEMS.filter(i => keys.includes(i.factor));
+    return seededShuffle(filtered, seed);
   }, [screen, role, seed]);
 
   const totalItems   = allItems.length;

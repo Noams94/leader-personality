@@ -197,23 +197,25 @@ export default function ResultsPage() {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6 ai-glow">
           <h2 className="font-bold text-gray-900 mb-1 text-center">{t('profileViz')}</h2>
 
-          {/* Sector toggle */}
-          <div className="flex items-center justify-center gap-2 mt-2 mb-4 flex-wrap">
-            <span className="text-xs text-gray-400">{t('compareTo')}</span>
-            {SECTORS.map(s => (
-              <button
-                key={s}
-                onClick={() => setSector(s)}
-                className={`px-3 py-1 rounded-full text-xs font-semibold transition-all duration-300 ease-in-out ${
-                  sector === s
-                    ? accentActive
-                    : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
-                }`}
-              >
-                {t(`sector_${s}`)}
-              </button>
-            ))}
-          </div>
+          {/* Sector toggle — only for leader (benchmarks come from leader self-reports) */}
+          {!isFollower && (
+            <div className="flex items-center justify-center gap-2 mt-2 mb-4 flex-wrap">
+              <span className="text-xs text-gray-400">{t('compareTo')}</span>
+              {SECTORS.map(s => (
+                <button
+                  key={s}
+                  onClick={() => setSector(s)}
+                  className={`px-3 py-1 rounded-full text-xs font-semibold transition-all duration-300 ease-in-out ${
+                    sector === s
+                      ? accentActive
+                      : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                  }`}
+                >
+                  {t(`sector_${s}`)}
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* Chart description */}
           <p className="text-xs text-center text-gray-400 mb-4">
@@ -236,7 +238,8 @@ export default function ResultsPage() {
         <div className="space-y-4 mb-8">
           {factorOrder.map(factor => {
             const score = scoreMap[factor] ?? 0;
-            const bench: number | undefined = BENCHMARKED_FACTORS.has(factor)
+            // Benchmarks only available for leader self-reports (Study 4)
+            const bench: number | undefined = (!isFollower && BENCHMARKED_FACTORS.has(factor))
               ? (selectedBench as Record<string, number>)[factor]
               : undefined;
 
