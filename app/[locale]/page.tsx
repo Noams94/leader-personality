@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import type { Metadata } from 'next';
 import AnimateIn from '@/components/AnimateIn';
+import SectorChart from '@/components/SectorChart';
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -16,11 +17,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 const FACTOR_KEYS = ['energy', 'psychopathy', 'organization', 'irritability', 'intellect'] as const;
 
-const SECTOR_DATA = [
-  { key: 'business', icon: '🏢', energy: 4.12, psychopathy: 1.18, organization: 4.35, irritability: 1.79, intellect: 4.26 },
-  { key: 'military', icon: '🎖️', energy: 4.35, psychopathy: 1.42, organization: 4.52, irritability: 2.18, intellect: 4.10 },
-  { key: 'religious',icon: '✡️', energy: 3.98, psychopathy: 1.05, organization: 4.15, irritability: 1.45, intellect: 4.38 },
-] as const;
 
 export default function HomePage() {
   const t  = useTranslations('home');
@@ -122,33 +118,21 @@ export default function HomePage() {
           <p className="text-gray-500 max-w-xl mx-auto">{t('sectorDesc')}</p>
         </AnimateIn>
         <AnimateIn delay={100}>
-          <div className="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-slate-50 border-b border-gray-100">
-                  <th className="py-4 px-5 font-semibold text-gray-700 text-start">{t('sectorTableHeader')}</th>
-                  <th className="py-4 px-4 font-semibold text-gray-700 text-center">⚡ {t('sectorBusiness') === 'Business' ? 'Energy' : 'אנרגיה'}</th>
-                  <th className="py-4 px-4 font-semibold text-gray-700 text-center">⚠️ {t('sectorBusiness') === 'Business' ? 'Psychopathy' : 'פסיכופתיות'}</th>
-                  <th className="py-4 px-4 font-semibold text-gray-700 text-center">🗂️ {t('sectorBusiness') === 'Business' ? 'Organization' : 'ארגון'}</th>
-                  <th className="py-4 px-4 font-semibold text-gray-700 text-center">🌡️ {t('sectorBusiness') === 'Business' ? 'Irritability' : 'עצבנות'}</th>
-                  <th className="py-4 px-4 font-semibold text-gray-700 text-center">🧠 {t('sectorBusiness') === 'Business' ? 'Intellect' : 'אינטלקט'}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {SECTOR_DATA.map((s, idx) => (
-                  <tr key={s.key} className={`transition-colors duration-200 hover:bg-blue-50/50 ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
-                    <td className="py-4 px-5 font-semibold text-gray-800">
-                      {s.icon} {t(`sector${s.key.charAt(0).toUpperCase() + s.key.slice(1)}` as 'sectorBusiness')}
-                    </td>
-                    <td className="py-4 px-4 text-center text-gray-600">{s.energy.toFixed(2)}</td>
-                    <td className="py-4 px-4 text-center text-gray-600">{s.psychopathy.toFixed(2)}</td>
-                    <td className="py-4 px-4 text-center text-gray-600">{s.organization.toFixed(2)}</td>
-                    <td className="py-4 px-4 text-center text-gray-600">{s.irritability.toFixed(2)}</td>
-                    <td className="py-4 px-4 text-center text-gray-600">{s.intellect.toFixed(2)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6">
+            <SectorChart
+              factorLabels={{
+                energy: tf('energy.name'),
+                psychopathy: tf('psychopathy.name'),
+                organization: tf('organization.name'),
+                irritability: tf('irritability.name'),
+                intellect: tf('intellect.name'),
+              }}
+              sectorLabels={{
+                business: t('sectorBusiness'),
+                military: t('sectorMilitary'),
+                religious: t('sectorReligious'),
+              }}
+            />
           </div>
           <p className="text-xs text-gray-400 mt-3 text-center">{t('sectorTableFootnote')}</p>
         </AnimateIn>

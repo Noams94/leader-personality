@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
+import InfographicLightbox from '@/components/InfographicLightbox';
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -73,6 +74,13 @@ export default function ResearchPage() {
           ))}
         </div>
       </Section>
+
+      {/* Visual Overview */}
+      <InfographicLightbox
+        src="/research-infographic.jpg"
+        alt={t('infographicAlt')}
+        caption={t('infographicCaption')}
+      />
 
       {/* Study Design */}
       <Section title={t('studyTitle')}>

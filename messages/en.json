@@ -33,27 +33,27 @@
     "energy": {
       "name": "Energy",
       "emoji": "⚡",
-      "desc": "Charisma, confidence, and the drive to lead. The most universally valued leadership trait."
+      "desc": "Charisma, excitement, enthusiasm, and activity level. Similar to extraversion trait"
     },
     "psychopathy": {
       "name": "Psychopathy",
       "emoji": "⚠️",
-      "desc": "The dark side of leadership — cruelty, manipulation, and abuse of power. A critical distinguishing factor."
+      "desc": "The dark side of leadership — antisocial orientation, lacking empathy and remorse, corruption and disingenuousness."
     },
     "organization": {
       "name": "Organization",
       "emoji": "🗂️",
-      "desc": "Precision, consistency, and performance orientation. Essential for operational excellence."
+      "desc": "Focuses on order, structure, performance-orientation, and accuracy. Similar to conscientiousness trait."
     },
     "irritability": {
       "name": "Irritability",
       "emoji": "🌡️",
-      "desc": "Hot-tempered, aggressive behavior. Varies significantly across leadership contexts."
+      "desc": "Hot-tempered, aggressive behavior and volatility. The low end reflect calmness."
     },
     "intellect": {
       "name": "Intellect",
       "emoji": "🧠",
-      "desc": "Wisdom, rationality, and cognitive sharpness. Universally prized in all leadership contexts."
+      "desc": "Wisdom, rationality, and cognitive sharpness."
     }
   },
   "research": {
@@ -64,6 +64,8 @@
     "whyDesc": "Most leadership research starts with theory — asking participants to rate leaders on pre-defined scales. The lexical approach goes the other way: it starts with natural language. By asking leaders to describe themself or followers to describe their leaders using varity of describtions, we capture the personality dimensions that actually matter to people, not just the ones researchers assumed would matter.",
     "insightBoxTitle": "The Core Insight",
     "insightBoxText": "If you want to know what personality dimensions matter in a leader, don't ask researchers — ask followers. The adjectives people naturally reach for when describing their leaders encode centuries of accumulated social knowledge about what leadership actually is.",
+    "infographicAlt": "Infographic: Beyond the Big Five — A New Taxonomy of Leader Personality showing 7 dimensions and cross-sector findings",
+    "infographicCaption": "Visual overview of the leadership personality taxonomy",
     "bigFiveTitle": "Why Not the Big Five?",
     "bigFiveDesc": "The Big Five personality framework (Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism) was derived from descriptions of people in general. But leaders are not 'people in general.' When followers describe their leaders, two factors emerge that the Big Five simply cannot capture:",
     "bigFiveFactor1": "Supportiveness — a warm, nurturing quality that followers cite as crucial but that Big Five measures as generic Agreeableness",
