@@ -34,7 +34,7 @@ export default function AboutPage() {
           alt="Noam Keshet"
           width={144}
           height={144}
-          className="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl flex-shrink-0 shadow-lg object-cover"
+          className="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl flex-shrink-0 shadow-lg object-cover object-top"
           priority
         />
         <div className="flex-1">
