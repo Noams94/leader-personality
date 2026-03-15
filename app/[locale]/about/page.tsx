@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
+import Image from 'next/image';
 import type { Metadata } from 'next';
 
 interface PageProps {
@@ -28,9 +29,14 @@ export default function AboutPage() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16">
       {/* Profile header */}
       <div className="flex flex-col sm:flex-row gap-8 items-start mb-16">
-        <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl bg-gradient-to-br from-blue-500 via-violet-500 to-purple-600 flex-shrink-0 flex items-center justify-center text-white text-4xl font-bold shadow-lg">
-          N
-        </div>
+        <Image
+          src="/profile-photo.webp"
+          alt="Noam Keshet"
+          width={144}
+          height={144}
+          className="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl flex-shrink-0 shadow-lg object-cover"
+          priority
+        />
         <div className="flex-1">
           <div className="text-sm font-medium text-blue-500 mb-1">{t('credential')}</div>
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tighter text-gray-900 mb-2">{t('title')}</h1>
@@ -81,6 +87,29 @@ export default function AboutPage() {
                   <div className="text-gray-400 text-xs">{s.sub}</div>
                 </div>
               ))}
+            </div>
+          </section>
+
+          {/* Opinion article */}
+          <section>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">{t('articleSectionTitle')}</h2>
+            <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 ease-in-out">
+              <div className="flex gap-3 items-start mb-3">
+                <div className="w-10 h-10 bg-amber-50 rounded-lg flex items-center justify-center text-lg flex-shrink-0">
+                  📰
+                </div>
+                <div>
+                  <p className="text-xs text-amber-600 font-medium">{t('articleSectionTitle')}</p>
+                  <h3 className="font-semibold text-gray-900 text-base leading-snug">{t('articleTitle')}</h3>
+                </div>
+              </div>
+              <p className="text-gray-600 text-sm leading-relaxed mb-4">{t('articleAbstract')}</p>
+              <Link
+                href="/about/article"
+                className="text-sm font-semibold text-blue-500 hover:text-blue-600 transition-colors"
+              >
+                {t('articleReadMore')}
+              </Link>
             </div>
           </section>
         </div>
